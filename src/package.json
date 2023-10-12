@@ -1,0 +1,29 @@
+{
+  "name": "restapi-node-docker",
+  "version": "0.0.1",
+  "description": "API Rest desenvolvida com NodeJS e PostgreSQL para rodar dentro de um container docker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tglima/restapi-node-docker.git"
+  },
+  "keywords": [
+    "nodejs",
+    "docker",
+    "express",
+    "node",
+    "dockerfile",
+    "tglima",
+    "restapi",
+    "rest"
+  ],
+  "author": "Thiago Lima de Sousa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tglima/restapi-node-docker/issues"
+  },
+  "homepage": "https://github.com/tglima/restapi-node-docker#readme"
+}
