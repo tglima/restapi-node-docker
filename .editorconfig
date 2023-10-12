@@ -1,0 +1,29 @@
+#Indica que as configuracoes definidas serao aplicadas a partir deste nivel,
+#considerando esse o nivel (/) root.
+root = true
+
+#Indica que as configuracores definidas serão aplicadas a todos os arquvios.
+[*]
+
+#Defini o tipo de charset que sera utilizado em todos os arquivos
+charset = utf-8
+
+#Define a forma como sera salvo a quebra de linha dos arquivos.
+#Aqui utilizamos o padrao do linux
+end_of_line = lf
+
+#Define que a indentacao sera feita com espacos
+indent_style = space
+
+#Define que a identacacao deve utilizar dois espacos
+indent_size = 2
+
+#Remove os espaços em brancos no final de cada linha
+trim_trailing_whitespace = true
+
+insert_final_newline = true
+
+#Define e forca como sera o estilo de chaves que sera usado
+#Restringe essa configuracao apenas para arquivos do tipo js
+[*.{js}]
+indent_brace_style = K&R
