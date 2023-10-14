@@ -4,7 +4,7 @@ module.exports = {
     node: true,
     jest: true,
   },
-  extends: ['airbnb-base', 'prettier'],
+  extends: ['airbnb-base', 'prettier', 'plugin:prettier/recommended'],
   plugins: ['prettier'],
   globals: {
     Atomics: 'readonly',
