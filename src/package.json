@@ -40,7 +40,7 @@
     "morgan-body": "^2.6.8",
     "pg": "^8.10.0",
     "sequelize": "^6.33.0",
-    "swagger-ui-express": "^4.6.3",
+    "swagger-ui-express": "^5.0.0",
     "youch": "^3.2.2"
   },
   "devDependencies": {
