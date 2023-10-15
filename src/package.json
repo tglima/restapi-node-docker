@@ -4,7 +4,8 @@
   "description": "API Rest desenvolvida com NodeJS e PostgreSQL para rodar dentro de um container docker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec npx babel-node index.js"
   },
   "repository": {
     "type": "git",
