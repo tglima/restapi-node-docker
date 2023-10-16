@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import healthRoutes from './health.routes';
 import swaggerRoutes from './swagger.routes';
 
 class Routes {
@@ -9,6 +10,7 @@ class Routes {
 
   setupRoutes() {
     this.router.use('/swagger', swaggerRoutes);
+    this.router.use('', healthRoutes);
   }
 
   getRoutes() {
