@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import healthRoutes from './health.routes';
+import productRoutes from './product.routes';
 import swaggerRoutes from './swagger.routes';
+
+const urlBase = `/v${process.env.NU_VERSION}`;
 
 class Routes {
   constructor() {
@@ -11,6 +14,7 @@ class Routes {
   setupRoutes() {
     this.router.use('', swaggerRoutes);
     this.router.use('', healthRoutes);
+    this.router.use(urlBase, productRoutes);
   }
 
   getRoutes() {
