@@ -5,7 +5,10 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec npx babel-node ./app/main.js"
+    "dev": "nodemon --exec npx babel-node ./app/main.js",
+    "prebuild": "if [ -d ../dist ]; then rm -rf ../dist; fi",
+    "build": "babel ./app -d ../dist && cpy package.json ../dist/ && cpy './app/assets/**' '../dist/assets/'",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
