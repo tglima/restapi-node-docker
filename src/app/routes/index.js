@@ -9,7 +9,7 @@ class Routes {
   }
 
   setupRoutes() {
-    this.router.use('/swagger', swaggerRoutes);
+    this.router.use('', swaggerRoutes);
     this.router.use('', healthRoutes);
   }
 
