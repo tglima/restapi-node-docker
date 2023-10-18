@@ -10,7 +10,7 @@
             "request": "launch",
             "type": "node-terminal",
             "cwd": "${workspaceFolder}/src",
-            "envFile": "${workspaceFolder}/development.env",
+            "envFile": "${workspaceFolder}/config.env",
             "skipFiles": [
                 "<node_internals>/**"
             ],            
