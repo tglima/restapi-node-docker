@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import morganBody from 'morgan-body';
 import Youch from 'youch';
 import routes from './routes';
+import authServices from './services/auth.services';
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
@@ -38,7 +39,7 @@ class App {
     this.server.use(express.json());
     this.server.use(helmet());
     this.server.use('/', apiLimiter);
-
+    this.server.use(authServices.checkAuth);
     if (process.env.MUST_RUN_MORGAN_BODY) {
       morganBody(this.server);
     }
