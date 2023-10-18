@@ -15,6 +15,10 @@ class Routes {
     this.router.use('', swaggerRoutes);
     this.router.use('', healthRoutes);
     this.router.use(urlBase, productRoutes);
+
+    this.router.get('/', (req, res) => {
+      res.redirect('/swagger');
+    });
   }
 
   getRoutes() {
