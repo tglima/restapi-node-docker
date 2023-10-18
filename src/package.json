@@ -1,6 +1,6 @@
 {
   "name": "restapi-node-docker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "API Rest desenvolvida com NodeJS e PostgreSQL para rodar dentro de um container docker",
   "main": "main.js",
   "scripts": {
