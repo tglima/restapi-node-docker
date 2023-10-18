@@ -6,12 +6,13 @@ import morganBody from 'morgan-body';
 import Youch from 'youch';
 import routes from './routes';
 import authServices from './services/auth.services';
+import constantUtil from './utils/constant.util';
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
   max: 120,
   statusCode: 429,
-  message: 'Limite de requisições ultrapassado, por favor, aguarde.',
+  message: constantUtil.MsgStatus429,
 });
 
 class App {
@@ -29,9 +30,7 @@ class App {
       process.env.NU_PORT
     );
     this.server.listen(this.port, () => {
-      console.log(
-        `API listening on ${process.env.NU_PORT}\nSwagger link: ${process.env.SWAGGER_URL}`
-      );
+      console.log(constantUtil.MsgStartAPI);
     });
   }
 

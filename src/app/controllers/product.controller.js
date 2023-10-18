@@ -1,3 +1,5 @@
+import constantUtil from '../utils/constant.util';
+
 const jsonProducts = {
   products: [
     {
@@ -33,7 +35,7 @@ function findProductById(id_product) {
   if (!id_product || Number.isNaN(id_product)) {
     returnDTO.status = 400;
     returnDTO.jsonBody = {
-      messages: ['id não informado ou inválido!'],
+      messages: [constantUtil.MsgInvalidID],
     };
     return returnDTO;
   }
@@ -47,7 +49,7 @@ function findProductById(id_product) {
   if (!product) {
     returnDTO.status = 404;
     returnDTO.jsonBody = {
-      messages: ['Item não encontrado!'],
+      messages: [constantUtil.MsgStatus404],
     };
     return returnDTO;
   }
