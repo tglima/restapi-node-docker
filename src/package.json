@@ -43,6 +43,7 @@
     "morgan-body": "^2.6.8",
     "pg": "^8.10.0",
     "sequelize": "^6.33.0",
+    "sqlite3": "^5.1.6",
     "swagger-ui-express": "^5.0.0",
     "youch": "^3.2.2"
   },
