@@ -16,6 +16,8 @@ class ConstantUtil {
     this.MsgStatus500 = 'Erro interno no servidor!';
     this.MsgInvalidID = 'id não informado ou inválido!';
     this.MsgStartAPI = `API listening on ${process.env.NU_PORT}\nSwagger link: ${process.env.SWAGGER_URL}`;
+    this.MsgConnSQLiteSuccess = 'Sucesso ao conectar no SQLite';
+    this.MsgConnSQLiteError = 'Erro ao conectar ao SQLite';
   }
 
   static getInstance() {
