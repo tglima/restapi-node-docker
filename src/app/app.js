@@ -19,16 +19,18 @@ const apiLimiter = rateLimit({
 class App {
   constructor() {
     this.server = express();
-    this.port = process.env.NU_PORT;
-    this.middlewares();
-    this.loadRoutes();
-    this.exceptionHandler();
+    this.#port = process.env.NU_PORT;
+    this.#middlewares();
+    this.#loadRoutes();
+    this.#exceptionHandler();
   }
+
+  #port;
 
   start() {
     dbUtil.SQLite.authenticate()
       .then(() => {
-        this.server.listen(this.port, () => {
+        this.server.listen(this.#port, () => {
           console.log(constantUtil.MsgStartAPI);
         });
       })
@@ -38,7 +40,7 @@ class App {
       });
   }
 
-  middlewares() {
+  #middlewares() {
     this.server.use(express.json());
     this.server.use(helmet());
     this.server.use('/', apiLimiter);
@@ -48,11 +50,11 @@ class App {
     }
   }
 
-  loadRoutes() {
+  #loadRoutes() {
     this.server.use(routes);
   }
 
-  exceptionHandler() {
+  #exceptionHandler() {
     this.server.use(async (err, request, response, next) => {
       const errors = await new Youch(err, request).toJSON();
       return response.status(500).json(errors);
