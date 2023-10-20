@@ -7,6 +7,7 @@ import Youch from 'youch';
 import routes from './routes';
 import authServices from './services/auth.services';
 import constantUtil from './utils/constant.util';
+import dbUtil from './utils/db.util';
 
 const apiLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 minutes
@@ -25,13 +26,16 @@ class App {
   }
 
   start() {
-    process.env.SWAGGER_URL = process.env.SWAGGER_URL.replace(
-      '{{NU_PORT}}',
-      process.env.NU_PORT
-    );
-    this.server.listen(this.port, () => {
-      console.log(constantUtil.MsgStartAPI);
-    });
+    dbUtil.SQLite.authenticate()
+      .then(() => {
+        this.server.listen(this.port, () => {
+          console.log(constantUtil.MsgStartAPI);
+        });
+      })
+      .catch((error) => {
+        console.error(constantUtil.MsgConnSQLiteError, error);
+        return error;
+      });
   }
 
   middlewares() {
