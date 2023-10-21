@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import express from 'express';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
@@ -6,6 +5,7 @@ import morganBody from 'morgan-body';
 import Youch from 'youch';
 import routes from './routes';
 import authServices from './services/auth.services';
+import logService from './services/log.service';
 import constantUtil from './utils/constant.util';
 import dbUtil from './utils/db.util';
 
@@ -31,11 +31,11 @@ class App {
     dbUtil.SQLite.authenticate()
       .then(() => {
         this.server.listen(this.#port, () => {
-          console.log(constantUtil.MsgStartAPI);
+          logService.info(constantUtil.MsgStartAPI);
         });
       })
       .catch((error) => {
-        console.error(constantUtil.MsgConnSQLiteError, error);
+        logService.error(constantUtil.MsgConnSQLiteError, error);
         return error;
       });
   }
@@ -57,7 +57,10 @@ class App {
   #exceptionHandler() {
     this.server.use(async (err, request, response, next) => {
       const errors = await new Youch(err, request).toJSON();
-      return response.status(500).json(errors);
+      logService.error(errors);
+      return response
+        .status(500)
+        .json({ messages: [constantUtil.MsgStatus500] });
     });
   }
 }

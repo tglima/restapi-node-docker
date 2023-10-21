@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 import { DataTypes } from 'sequelize';
+import logService from '../../services/log.service';
 import dbUtil from '../../utils/db.util';
 
 class ProductRepository {
@@ -58,6 +58,7 @@ class ProductRepository {
       returnMethod.response = null;
       returnMethod.error = error;
       returnMethod.error_message = error.message;
+      logService.error(error);
     }
 
     returnMethod.dt_finish = new Date();
@@ -79,6 +80,7 @@ class ProductRepository {
       returnMethodDTO.response = null;
       returnMethodDTO.error = error;
       returnMethodDTO.error_message = error.message;
+      logService.error(error);
     }
 
     returnMethodDTO.dt_finish = new Date();

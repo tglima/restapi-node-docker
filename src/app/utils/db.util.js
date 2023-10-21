@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const { Sequelize } = require('sequelize');
 const path = require('path');
 
