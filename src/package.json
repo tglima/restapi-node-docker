@@ -45,6 +45,7 @@
     "sequelize": "^6.33.0",
     "sqlite3": "^5.1.6",
     "swagger-ui-express": "^5.0.0",
+    "uuid": "^9.0.1",
     "winston": "^3.11.0",
     "youch": "^3.2.2"
   },
