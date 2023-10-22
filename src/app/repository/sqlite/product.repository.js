@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import logService from '../../services/log.service';
 import dbUtil from '../../utils/db.util';
+import util from '../../utils/util';
 
 class ProductRepository {
   constructor() {
@@ -47,7 +48,7 @@ class ProductRepository {
   async getAllProducts() {
     const returnMethod = {};
     returnMethod.nm_method = 'getAllProducts';
-    returnMethod.dt_start = new Date();
+    returnMethod.dt_start = util.getDateNow();
     returnMethod.was_error = false;
 
     try {
@@ -61,14 +62,14 @@ class ProductRepository {
       logService.error(error);
     }
 
-    returnMethod.dt_finish = new Date();
+    returnMethod.dt_finish = util.getDateNow();
     return returnMethod;
   }
 
   async getProductById(id) {
     const returnMethodDTO = {};
     returnMethodDTO.nm_method = 'getProductById';
-    returnMethodDTO.dt_start = new Date();
+    returnMethodDTO.dt_start = util.getDateNow();
     returnMethodDTO.was_error = false;
     returnMethodDTO.info = [{ id }];
 
@@ -83,7 +84,7 @@ class ProductRepository {
       logService.error(error);
     }
 
-    returnMethodDTO.dt_finish = new Date();
+    returnMethodDTO.dt_finish = util.getDateNow();
     return returnMethodDTO;
   }
 }
