@@ -35,7 +35,7 @@ class App {
         });
       })
       .catch((error) => {
-        logService.error(constantUtil.MsgConnSQLiteError, error);
+        logService.error(constantUtil.MsgConnSQLiteError);
         return error;
       });
   }
