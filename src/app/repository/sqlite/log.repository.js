@@ -117,5 +117,6 @@ class LogRepository {
 export const TypesEvent = Object.freeze({
   SERVICE: 'service',
   REQUEST: 'request',
+  METHOD: 'method',
 });
 export default new LogRepository();
