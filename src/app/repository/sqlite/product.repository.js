@@ -67,25 +67,25 @@ class ProductRepository {
   }
 
   async getProductById(id) {
-    const returnMethodDTO = {};
-    returnMethodDTO.nm_method = 'getProductById';
-    returnMethodDTO.dt_start = util.getDateNow();
-    returnMethodDTO.was_error = false;
-    returnMethodDTO.info = [{ id }];
+    const returnMethod = {};
+    returnMethod.nm_method = 'getProductById';
+    returnMethod.dt_start = util.getDateNow();
+    returnMethod.was_error = false;
+    returnMethod.info = [{ id }];
 
     try {
       const product = await this.#productDB.findByPk(id);
-      returnMethodDTO.response = !product ? null : product;
+      returnMethod.response = !product ? null : product;
     } catch (error) {
-      returnMethodDTO.was_error = true;
-      returnMethodDTO.response = null;
-      returnMethodDTO.error = error;
-      returnMethodDTO.error_message = error.message;
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+      returnMethod.error = error;
+      returnMethod.error_message = error.message;
       logService.error(error);
     }
 
-    returnMethodDTO.dt_finish = util.getDateNow();
-    return returnMethodDTO;
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
   }
 }
 
