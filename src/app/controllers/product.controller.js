@@ -1,44 +1,103 @@
+import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
 import productRepository from '../repository/sqlite/product.repository';
+import logService from '../services/log.service';
 import constantUtil from '../utils/constant.util';
+import util from '../utils/util';
 
 class ProductController {
   async findAll(req, res) {
-    const responseMethod = await productRepository.getAllProducts();
-
-    if (responseMethod.error) {
-      return res.status(500).json({ messages: [constantUtil.MsgStatus500] });
-    }
-
-    if (!responseMethod.response) {
-      return res.status(404).json({ messages: [constantUtil.MsgStatus404] });
-    }
-
-    const products = {
-      items: responseMethod.response.map((product) => product.toJSON()),
+    const LogDTO = {
+      dt_start: util.getDateNow(),
+      type_event: TypesEvent.REQUEST,
+      json_log_event: {},
     };
 
-    return res.status(200).json(products);
+    let responseAPI;
+
+    const responseMethod = await productRepository.getAllProducts();
+    LogDTO.json_log_event.methods = [responseMethod];
+
+    if (responseMethod.error) {
+      responseAPI = {
+        status: 500,
+        body: { messages: [constantUtil.MsgStatus500] },
+      };
+    }
+
+    if (!responseAPI && !responseMethod.response) {
+      responseAPI = {
+        status: 404,
+        body: { messages: [constantUtil.MsgStatus404] },
+      };
+    }
+
+    if (!responseAPI) {
+      const products = {
+        products: responseMethod.response.map((product) => product.toJSON()),
+      };
+
+      responseAPI = { status: 200, body: products };
+    }
+
+    LogDTO.json_log_event.request_data = util.getRequestData(req);
+    LogDTO.json_log_event.response_data = responseAPI;
+
+    logService.info(JSON.stringify(LogDTO));
+    logRepository.saveLogEvent(LogDTO);
+    return res.status(responseAPI.status).json(responseAPI.body);
   }
 
   async findById(req, res) {
+    const LogDTO = {
+      dt_start: util.getDateNow(),
+      type_event: TypesEvent.REQUEST,
+      json_log_event: {},
+    };
+
+    let responseAPI;
+
     let { id } = req.params;
     id = +id;
 
     if (!id || !Number.isSafeInteger(id)) {
-      return res.status(400).json({ messages: [constantUtil.MsgInvalidID] });
+      responseAPI = {
+        status: 400,
+        body: { messages: [constantUtil.MsgInvalidID] },
+      };
     }
 
-    const responseMethod = await productRepository.getProductById(id);
+    if (!responseAPI) {
+      const responseMethod = await productRepository.getProductById(id);
+      LogDTO.json_log_event.methods = [responseMethod];
 
-    if (responseMethod.error) {
-      return res.status(500).json({ messages: [constantUtil.MsgStatus500] });
+      if (responseMethod.error) {
+        responseAPI = {
+          status: 500,
+          body: { messages: [constantUtil.MsgStatus500] },
+        };
+      }
+
+      if (!responseAPI && !responseMethod.response) {
+        responseAPI = {
+          status: 404,
+          body: { messages: [constantUtil.MsgStatus404] },
+        };
+      }
+
+      if (!responseAPI) {
+        responseAPI = {
+          status: 200,
+          body: responseMethod.response.toJSON(),
+        };
+      }
     }
 
-    if (!responseMethod.response) {
-      return res.status(404).json({ messages: [constantUtil.MsgStatus404] });
-    }
+    LogDTO.json_log_event.request_data = util.getRequestData(req);
+    LogDTO.json_log_event.response_data = responseAPI;
 
-    return res.status(200).json(responseMethod.response.toJSON());
+    logService.info(JSON.stringify(LogDTO));
+    logRepository.saveLogEvent(LogDTO);
+    return res.status(responseAPI.status).json(responseAPI.body);
   }
 }
 
