@@ -103,7 +103,7 @@ class LogRepository {
         dt_start: logEvent.dt_start,
         dt_finish: util.getDateNow(),
         type_event: logEvent.type_event,
-        json_log_event: logEvent.json_log_event,
+        json_log_event: JSON.stringify(logEvent.json_log_event),
       });
     } catch (error) {
       logService.error(error);
