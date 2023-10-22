@@ -12,6 +12,17 @@ class Util {
     return dateNow;
   }
 
+  getRequestData(req) {
+    return {
+      headers: req.headers,
+      body: req.body,
+      method: req.method,
+      params: req.params,
+      query: req.query,
+      url: req.url,
+    };
+  }
+
   static getInstance() {
     if (!instance) {
       instance = new Util();
