@@ -18,6 +18,8 @@ class ConstantUtil {
     this.MsgStartAPI = `API listening on ${process.env.NU_PORT}\nSwagger link: ${process.env.SWAGGER_URL}`;
     this.MsgConnSQLiteSuccess = 'Sucesso ao conectar no SQLite';
     this.MsgConnSQLiteError = 'Erro ao conectar ao SQLite';
+    this.MomentTimeZone = 'America/Sao_Paulo';
+    this.MomentDateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
   }
 
   static getInstance() {
