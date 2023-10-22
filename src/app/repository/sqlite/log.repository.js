@@ -17,11 +17,6 @@ class LogRepository {
 
   #logErrorDB;
 
-  static TypesEvent = {
-    SERVICE: 'service',
-    REQUEST: 'request',
-  };
-
   #defineLogEvent() {
     this.#logEventDB = this.#dbUtil.SQLite.define(
       'log_event',
@@ -119,5 +114,8 @@ class LogRepository {
   }
 }
 
-Object.freeze(LogRepository.TypesEvent);
+export const TypesEvent = Object.freeze({
+  SERVICE: 'service',
+  REQUEST: 'request',
+});
 export default new LogRepository();
