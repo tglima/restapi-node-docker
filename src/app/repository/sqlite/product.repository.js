@@ -49,7 +49,9 @@ class ProductRepository {
     const returnMethod = {};
     returnMethod.nm_method = 'getAllProducts';
     returnMethod.dt_start = util.getDateNow();
+    returnMethod.dt_finish = null;
     returnMethod.was_error = false;
+    returnMethod.response = null;
 
     try {
       const products = await this.#productDB.findAll();
@@ -70,8 +72,10 @@ class ProductRepository {
     const returnMethod = {};
     returnMethod.nm_method = 'getProductById';
     returnMethod.dt_start = util.getDateNow();
+    returnMethod.dt_finish = null;
     returnMethod.was_error = false;
     returnMethod.info = [{ id }];
+    returnMethod.response = null;
 
     try {
       const product = await this.#productDB.findByPk(id);

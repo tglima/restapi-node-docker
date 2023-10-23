@@ -8,8 +8,13 @@ class ProductController {
   async findAll(req, res) {
     const LogDTO = {
       dt_start: util.getDateNow(),
+      dy_finish: undefined,
       type_event: TypesEvent.REQUEST,
-      json_log_event: {},
+      json_log_event: {
+        methods: undefined,
+        request_data: undefined,
+        response_data: undefined,
+      },
     };
 
     let responseAPI;
@@ -50,8 +55,13 @@ class ProductController {
   async findById(req, res) {
     const LogDTO = {
       dt_start: util.getDateNow(),
+      dy_finish: undefined,
       type_event: TypesEvent.REQUEST,
-      json_log_event: {},
+      json_log_event: {
+        methods: undefined,
+        request_data: undefined,
+        response_data: undefined,
+      },
     };
 
     let responseAPI;
