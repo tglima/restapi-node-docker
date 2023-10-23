@@ -9,6 +9,7 @@ function validateRequest(req) {
   const returnMethod = {};
   returnMethod.nm_method = 'validateRequest';
   returnMethod.dt_start = util.getDateNow();
+  returnMethod.dt_finish = undefined;
   returnMethod.was_error = false;
   returnMethod.response = undefined;
   const info = [];
@@ -65,13 +66,19 @@ class AuthService {
   async checkAuth(req, res, next) {
     const LogDTO = {
       dt_start: util.getDateNow(),
+      dy_finish: undefined,
       type_event: TypesEvent.REQUEST,
-      json_log_event: {},
+      json_log_event: {
+        methods: undefined,
+        request_data: undefined,
+        response_data: undefined,
+      },
     };
 
     LogDTO.json_log_event.request_data = util.getRequestData(req);
-
     const responseMethod = validateRequest(req);
+
+    LogDTO.json_log_event.methods = [responseMethod];
 
     if (!responseMethod.response) {
       const responseAPI = {
@@ -80,11 +87,10 @@ class AuthService {
       };
 
       LogDTO.json_log_event.response_data = responseAPI;
-      logService.info(JSON.stringify(LogDTO));
+      logService.info('unauthorized request');
       logRepository.saveLogEvent(LogDTO);
       return res.status(responseAPI.status).json(responseAPI.body);
     }
-    logService.info('authorized request');
     return next();
   }
 }
