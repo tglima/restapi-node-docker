@@ -40,10 +40,7 @@ function getSwaggerDocument() {
 
     if (swaggerDocument.servers[0].url) {
       const { url } = swaggerDocument.servers[0];
-      swaggerDocument.servers[0].url = url.replace(
-        '{{NU_VERSION}}',
-        process.env.NU_VERSION
-      );
+      swaggerDocument.servers[0].url = url.replace('{{NU_VERSION}}', process.env.NU_VERSION);
     }
   }
 

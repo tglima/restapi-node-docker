@@ -61,9 +61,7 @@ class App {
       const errors = await new Youch(err, request).toJSON();
       logService.error(errors);
       logRepository.saveLogError({ method: 'exceptionHandler', error: err });
-      return response
-        .status(500)
-        .json({ messages: [constantUtil.MsgStatus500] });
+      return response.status(500).json({ messages: [constantUtil.MsgStatus500] });
     });
   }
 }

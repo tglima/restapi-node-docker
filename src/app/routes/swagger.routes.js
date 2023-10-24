@@ -10,11 +10,7 @@ class SwaggerRoutes {
 
   setupRoutes() {
     this.router.get('/swagger.json', swaggerController.getSwaggerJSON);
-    this.router.use(
-      '/swagger',
-      swaggerUi.serve,
-      swaggerController.setupSwaggerUI()
-    );
+    this.router.use('/swagger', swaggerUi.serve, swaggerController.setupSwaggerUI());
   }
 
   getRoutes() {

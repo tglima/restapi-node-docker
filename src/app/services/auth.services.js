@@ -21,18 +21,13 @@ function validateRequest(req) {
   urlBase = urlBase.replace(`/api/v${process.env.NU_VERSION}`, '');
   info.push(`info: urlBase = ${urlBase}`);
 
-  if (
-    urlBase === '/' ||
-    publicRoutes.some((route) => urlBase.includes(route))
-  ) {
+  if (urlBase === '/' || publicRoutes.some((route) => urlBase.includes(route))) {
     returnMethod.dt_finish = util.getDateNow();
     returnMethod.response = true;
     info.push("info: it's public route!");
   }
 
-  const apiKey = !req.header('x-api-key')
-    ? req.header('X-API-KEY')
-    : req.header('x-api-key');
+  const apiKey = !req.header('x-api-key') ? req.header('X-API-KEY') : req.header('x-api-key');
 
   info.push(`info: apiKey from header = ${apiKey}`);
 
