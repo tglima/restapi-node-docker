@@ -66,7 +66,7 @@ class AuthService {
   async checkAuth(req, res, next) {
     const LogDTO = {
       dt_start: util.getDateNow(),
-      dy_finish: undefined,
+      dt_finish: undefined,
       type_event: TypesEvent.REQUEST,
       json_log_event: {
         methods: undefined,
