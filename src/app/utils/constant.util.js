@@ -15,7 +15,15 @@ class ConstantUtil {
     this.MsgConnSQLiteSuccess = 'Sucesso ao conectar no SQLite';
     this.MsgConnSQLiteError = 'Erro ao conectar ao SQLite';
     this.MomentTimeZone = 'America/Sao_Paulo';
-    this.MomentDateFormat = 'YYYY-MM-DD HH:mm:ss.SSS';
+    this.MomentDateFormat = 'YYYY-MM-DD HH:mm:ss';
+    this.MsgInvalidMomentDateFormat = `Data inválida. Verifique os valores fornecidos e utilize o formato ${this.MomentDateFormat}`;
+    this.MsgInvalidDateTimeRange = 'A data de início deve ser anterior à data de fim';
+    this.MsgDateTimeIsEmpty = 'A data fornecida está vazia ou nula';
+    this.MsgInvalidQueryParams = 'Os parametros informados não são válidos';
+    this.MsgInvalidValue = 'o valor informado é inválido!';
+    this.CodeEventFormatRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?!.*--)(?!.*[0-9-]{21,})(?!.*\s).{20,}$/;
+    this.ApiKeyFormatRegex = /^(?=[a-zA-Z\d-]{15,}$)(?!.*([a-zA-Z\d-])\1{2,})(?!.*\s)/;
+    this.SQliteQueryFindByApiKey = `json_extract(json_log_event, '$.io_data.request_data.headers."api-key"') = '{{VALUE}}'`;
   }
 
   static getInstance() {
