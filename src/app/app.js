@@ -1,5 +1,4 @@
 import express from 'express';
-import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import morganBody from 'morgan-body';
 import Youch from 'youch';
@@ -9,13 +8,7 @@ import authServices from './services/auth.services';
 import logService from './services/log.service';
 import constantUtil from './utils/constant.util';
 import dbUtil from './utils/db.util';
-
-const apiLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minutes
-  max: 120,
-  statusCode: 429,
-  message: constantUtil.MsgStatus429,
-});
+import util from './utils/util';
 
 class App {
   constructor() {
@@ -45,7 +38,8 @@ class App {
   #middlewares() {
     this.server.use(express.json());
     this.server.use(helmet());
-    this.server.use('/', apiLimiter);
+    this.server.use('/', util.rateLimitAPI());
+    this.server.use(`/v${process.env.NU_VERSION}/mng/database-backup/`, util.rateLimitAPI(1));
     this.server.use(authServices.checkAuth);
     if (process.env.MUST_RUN_MORGAN_BODY) {
       morganBody(this.server);
