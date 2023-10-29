@@ -272,6 +272,60 @@ class LogRepository {
     returnMethod.dt_finish = util.getDateNow();
     return returnMethod;
   }
+
+  async countLogEvent() {
+    const returnMethod = {
+      nm_method: 'countLogEvent',
+      dt_start: util.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+    };
+
+    try {
+      const qtItems = await this.#logEventDB.count();
+      returnMethod.info.push(`info: qtItems = ${qtItems}`);
+      returnMethod.response = qtItems;
+    } catch (error) {
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
+
+  async countLogError() {
+    const returnMethod = {
+      nm_method: 'countLogError',
+      dt_start: util.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+    };
+
+    try {
+      const qtItems = await this.#logErrorDB.count();
+      returnMethod.info.push(`info: qtItems = ${qtItems}`);
+      returnMethod.response = qtItems;
+    } catch (error) {
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
 }
 
 export const TypesEvent = Object.freeze({
