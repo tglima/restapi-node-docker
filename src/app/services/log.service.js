@@ -19,9 +19,13 @@ class LogService {
     this.#logger.info(message);
   }
 
-  async error(method, error) {
+  async error({ method, error }) {
     this.#logger.error(error.message);
-    await logRepository.saveLogError({ method, error });
+    const logError = { method, error };
+
+    // Feito assim por causa do import que foi adaptado
+    // para evitar erro de dependências cíclicas
+    await logRepository.default.saveLogError(logError);
   }
 
   static getInstance() {
