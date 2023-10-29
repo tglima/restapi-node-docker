@@ -133,7 +133,7 @@ class LogRepository {
         json_log_error: exception,
       });
     } catch (error) {
-      logService.error(error);
+      logService.info(error);
     }
   }
 
@@ -151,8 +151,7 @@ class LogRepository {
         json_log_event: JSON.stringify(logEvent.json_log_event),
       });
     } catch (error) {
-      logService.error(error);
-      this.saveLogError(error);
+      logService.error(`method: saveLogEvent => Error: ${error}`);
     }
 
     return logEvent.code_event;
@@ -192,10 +191,10 @@ class LogRepository {
         returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
       }
     } catch (error) {
+      returnMethod.info.push(`Error message: ${error.message}`);
+      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-      returnMethod.error = error;
-      returnMethod.error_message = error.message;
       logService.error(error);
     }
 
@@ -239,10 +238,10 @@ class LogRepository {
         returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
       }
     } catch (error) {
+      returnMethod.info.push(`Error message: ${error.message}`);
+      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-      returnMethod.error = error;
-      returnMethod.error_message = error.message;
       logService.error(error);
     }
 
@@ -263,10 +262,10 @@ class LogRepository {
       const logDB = await this.#logEventDB.findOne({ where: { code_event: codeEvent } });
       returnMethod.response = !logDB ? null : formartResultLogDB(logDB);
     } catch (error) {
+      returnMethod.info.push(`Error message: ${error.message}`);
+      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-      returnMethod.error = error;
-      returnMethod.error_message = error.message;
       logService.error(error);
     }
 
