@@ -1,8 +1,68 @@
+/* eslint-disable no-unused-vars */
+import { readFile } from 'fs/promises';
+import path from 'path';
 import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
 import logService from '../services/log.service';
 import validator from '../services/validator.services';
 import constant from '../utils/constant.util';
+import dbUtil from '../utils/db.util';
 import util from '../utils/util';
+
+async function getZipDataBase(codeEvent) {
+  const returnMethod = {
+    nm_method: 'getZipDataBase',
+    dt_start: util.getDateNow(),
+    dt_finish: null,
+    was_error: null,
+    response: null,
+    info: [],
+    methods: [],
+    messages: [],
+  };
+
+  returnMethod.info.push(`info: database = ${dbUtil.DataBaseFileName}`);
+  let filePath;
+  let fileData;
+
+  try {
+    filePath = path.join(__dirname, '..', 'assets', dbUtil.DataBaseFileName);
+    fileData = await readFile(filePath);
+  } catch (error) {
+    logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
+    returnMethod.info.push(`Error message: ${error.message}`);
+    returnMethod.messages.push(constant.MsgErrorFindDb);
+    returnMethod.was_error = true;
+    returnMethod.response = null;
+  }
+
+  returnMethod.info.push(`info: filePath = ${filePath}`);
+
+  if (fileData) {
+    const respCreateZip = await util.createZip(fileData, dbUtil.DataBaseFileName, `${codeEvent}.zip`);
+
+    if (respCreateZip.was_error || !respCreateZip.response) {
+      respCreateZip.messages.forEach((message) => {
+        returnMethod.messages.push(message);
+      });
+
+      returnMethod.response = null;
+      returnMethod.info.push(`info: zipFile: is null`);
+    } else {
+      returnMethod.info.push(`info: zipFile generated`);
+      returnMethod.response = respCreateZip.response;
+    }
+  } else {
+    returnMethod.info.push(`info: fileData is null`);
+    returnMethod.messages.push(constant.MsgFailGetFile);
+  }
+
+  if (!returnMethod.response) {
+    logService.info(JSON.stringify(returnMethod));
+  }
+
+  returnMethod.dt_finish = util.getDateNow();
+  return returnMethod;
+}
 
 function getResponseAPIRespFind(respFind, code_event) {
   const returnMethod = {
@@ -258,6 +318,68 @@ class ManagerController {
 
     await logRepository.saveLogEvent(LogDTO);
     return res.status(responseAPI.status).json(responseAPI.body);
+  }
+
+  async getDataBaseFile(req, res) {
+    const LogDTO = {
+      code_event: util.getNewCodeEvent(),
+      dt_start: util.getDateNow(),
+      dt_finish: undefined,
+      type_event: TypesEvent.REQUEST,
+      json_log_event: {
+        io_data: {
+          request_data: util.getRequestData(req),
+          response_data: undefined,
+        },
+        methods: [],
+      },
+    };
+
+    const messages = [];
+    const responseAPI = {};
+    let zipPath = null;
+
+    const respGetZipDataBase = await getZipDataBase(LogDTO.code_event);
+
+    LogDTO.json_log_event.methods.push(respGetZipDataBase);
+
+    if (!respGetZipDataBase.response) {
+      respGetZipDataBase.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      responseAPI.status = 500;
+      responseAPI.body = { code_event: LogDTO.code_event, messages };
+    } else {
+      responseAPI.status = 200;
+      responseAPI.body = { file: `${LogDTO.code_event}.zip` };
+      responseAPI.header = {
+        'Content-Disposition': `attachment; filename=${LogDTO.code_event}.zip`,
+        'Content-Type': 'application/zip',
+      };
+
+      zipPath = respGetZipDataBase.response;
+    }
+
+    LogDTO.json_log_event.io_data.response_data = responseAPI;
+
+    await logRepository.saveLogEvent(LogDTO);
+
+    if (responseAPI.status !== 200) {
+      return res.status(responseAPI.status).json(responseAPI.body);
+    }
+
+    res.set(responseAPI.header);
+    return res.sendFile(zipPath);
+  }
+
+  async apenasTeste(req, res) {
+    const fileData =
+      '/home/tglima/MySpace/MyDevSpace/Source/restapi-node-docker/src/app/assets/339ece24-ad1d-419c-bd6a-156e36086dcc.zip';
+
+    res.setHeader('Content-Disposition', `attachment; filename=database.zip`);
+    res.setHeader('Content-Type', 'application/zip');
+    return res.download(fileData);
   }
 }
 
