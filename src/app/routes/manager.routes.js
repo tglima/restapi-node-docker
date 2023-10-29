@@ -5,7 +5,7 @@ class ManagerRoutes {
   constructor() {
     this.router = Router();
     this.router.get('/mng/database-backup/', managerController.getDataBaseFile);
-    this.router.get('/mng/log_events/find/', managerController.findLogEvent);
+    this.router.get('/mng/log-events/find/', managerController.findLogEvent);
   }
 
   getRoutes() {
