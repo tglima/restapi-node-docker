@@ -2,7 +2,6 @@ import express from 'express';
 import helmet from 'helmet';
 import morganBody from 'morgan-body';
 import Youch from 'youch';
-import logRepository from './repository/sqlite/log.repository';
 import routes from './routes';
 import authServices from './services/auth.services';
 import logService from './services/log.service';
@@ -29,9 +28,10 @@ class App {
         });
       })
       .catch((error) => {
-        logService.error(constantUtil.MsgConnSQLiteError);
-        logRepository.saveLogError({ method: 'start', error });
-        return error;
+        logService.info(`Error message: ${error.message}`);
+        logService.error({ method: 'start', error }).then(() => {
+          return error;
+        });
       });
   }
 
@@ -53,9 +53,10 @@ class App {
   #exceptionHandler() {
     this.server.use(async (err, request, response, next) => {
       const errors = await new Youch(err, request).toJSON();
-      logService.error(errors);
-      logRepository.saveLogError({ method: 'exceptionHandler', error: err });
-      return response.status(500).json({ messages: [constantUtil.MsgStatus500] });
+      logService.info(errors);
+      logService.error({ method: 'exceptionHandler', error: err }).then(() => {
+        return response.status(500).json({ messages: [constantUtil.MsgStatus500] });
+      });
     });
   }
 }

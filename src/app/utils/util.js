@@ -78,9 +78,10 @@ class Util {
 
       returnMethod.response = filePath;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErrorCreateZip);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }

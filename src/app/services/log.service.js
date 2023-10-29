@@ -1,5 +1,7 @@
 import winston from 'winston';
 
+const logRepository = require('../repository/sqlite/log.repository');
+
 let instance;
 
 class LogService {
@@ -17,8 +19,9 @@ class LogService {
     this.#logger.info(message);
   }
 
-  error(message) {
-    this.#logger.error(message);
+  async error(method, error) {
+    this.#logger.error(error.message);
+    await logRepository.saveLogError({ method, error });
   }
 
   static getInstance() {

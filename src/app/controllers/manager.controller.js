@@ -29,7 +29,8 @@ async function getZipDataBase(codeEvent) {
     filePath = path.join(__dirname, '..', 'assets', dbUtil.DataBaseFileName);
     fileData = await readFile(filePath);
   } catch (error) {
-    logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
+    logService.info(`Error message: ${error.message}`);
+    await logService.error({ method: returnMethod.nm_method, error });
     returnMethod.info.push(`Error message: ${error.message}`);
     returnMethod.messages.push(constant.MsgErrorFindDb);
     returnMethod.was_error = true;
@@ -456,7 +457,7 @@ class ManagerController {
     }
 
     if (!responseAPI.status) {
-      const respGetDataBaseSize = await dbUtil.getSizeDatabase();
+      const respGetDataBaseSize = await dbUtil.getDataBaseSize();
       LogDTO.json_log_event.methods.push(respGetDataBaseSize);
 
       if (respGetDataBaseSize.was_error) {

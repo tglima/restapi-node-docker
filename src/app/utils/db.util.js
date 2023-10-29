@@ -31,6 +31,7 @@ class DbUtil {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     try {
@@ -38,9 +39,10 @@ class DbUtil {
       returnMethod.info.push(`info: tableNames = ${JSON.stringify(tableNames)}`);
       returnMethod.response = tableNames;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }
@@ -57,6 +59,7 @@ class DbUtil {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     try {
@@ -66,9 +69,10 @@ class DbUtil {
       returnMethod.info.push(`info: fileSizeInMegabytes = ${fileSizeInMegabytes}`);
       returnMethod.response = fileSizeInMegabytes;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErrorGetInfoFile);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }

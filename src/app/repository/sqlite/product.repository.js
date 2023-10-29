@@ -53,16 +53,21 @@ class ProductRepository {
     returnMethod.dt_finish = null;
     returnMethod.was_error = false;
     returnMethod.response = null;
+    returnMethod.info = [];
 
     try {
       const products = await this.#productDB.findAll();
       returnMethod.response = !products ? null : products;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
+
+      //
       returnMethod.error = error;
       returnMethod.error_message = error.message;
-      logService.error(error);
     }
 
     returnMethod.dt_finish = util.getDateNow();
@@ -77,16 +82,21 @@ class ProductRepository {
     returnMethod.was_error = false;
     returnMethod.info = [{ id }];
     returnMethod.response = null;
+    returnMethod.info = [];
 
     try {
       const product = await this.#productDB.findByPk(id);
       returnMethod.response = !product ? null : product;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
+
+      //
       returnMethod.error = error;
       returnMethod.error_message = error.message;
-      logService.error(error);
     }
 
     returnMethod.dt_finish = util.getDateNow();
@@ -102,6 +112,7 @@ class ProductRepository {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     try {
@@ -109,9 +120,10 @@ class ProductRepository {
       returnMethod.info.push(`info: qtItems = ${qtItems}`);
       returnMethod.response = qtItems;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }

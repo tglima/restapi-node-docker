@@ -133,7 +133,7 @@ class LogRepository {
         json_log_error: exception,
       });
     } catch (error) {
-      logService.info(error);
+      logService.info(`Error message: ${error.message}`);
     }
   }
 
@@ -151,7 +151,8 @@ class LogRepository {
         json_log_event: JSON.stringify(logEvent.json_log_event),
       });
     } catch (error) {
-      logService.error(`method: saveLogEvent => Error: ${error}`);
+      logService.info(`Error message: ${error.message}`);
+      logService.error({ method: 'saveLogEvent', error });
     }
 
     return logEvent.code_event;
@@ -166,6 +167,7 @@ class LogRepository {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     const offset = (page - 1) * this.#qtLimitResult;
@@ -191,11 +193,11 @@ class LogRepository {
         returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
       }
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-      logService.error(error);
     }
 
     returnMethod.dt_finish = util.getDateNow();
@@ -238,11 +240,11 @@ class LogRepository {
         returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
       }
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-      logService.error(error);
     }
 
     returnMethod.dt_finish = util.getDateNow();
@@ -262,11 +264,11 @@ class LogRepository {
       const logDB = await this.#logEventDB.findOne({ where: { code_event: codeEvent } });
       returnMethod.response = !logDB ? null : formartResultLogDB(logDB);
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-      logService.error(error);
     }
 
     returnMethod.dt_finish = util.getDateNow();
@@ -289,9 +291,10 @@ class LogRepository {
       returnMethod.info.push(`info: qtItems = ${qtItems}`);
       returnMethod.response = qtItems;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }
@@ -316,9 +319,10 @@ class LogRepository {
       returnMethod.info.push(`info: qtItems = ${qtItems}`);
       returnMethod.response = qtItems;
     } catch (error) {
+      logService.info(`Error message: ${error.message}`);
+      await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
-      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }
