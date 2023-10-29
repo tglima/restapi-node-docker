@@ -2,6 +2,7 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
+import productRepository from '../repository/sqlite/product.repository';
 import logService from '../services/log.service';
 import validator from '../services/validator.services';
 import constant from '../utils/constant.util';
@@ -373,13 +374,118 @@ class ManagerController {
     return res.sendFile(zipPath);
   }
 
-  async apenasTeste(req, res) {
-    const fileData =
-      '/home/tglima/MySpace/MyDevSpace/Source/restapi-node-docker/src/app/assets/339ece24-ad1d-419c-bd6a-156e36086dcc.zip';
+  async getDataBaseInfo(req, res) {
+    const LogDTO = {
+      code_event: util.getNewCodeEvent(),
+      dt_start: util.getDateNow(),
+      dt_finish: undefined,
+      type_event: TypesEvent.REQUEST,
+      json_log_event: {
+        io_data: {
+          request_data: util.getRequestData(req),
+          response_data: undefined,
+        },
+        methods: [],
+      },
+    };
 
-    res.setHeader('Content-Disposition', `attachment; filename=database.zip`);
-    res.setHeader('Content-Type', 'application/zip');
-    return res.download(fileData);
+    const messages = [];
+    const responseAPI = { status: undefined, body: undefined };
+    const jsonDBInfo = {
+      database_name: undefined,
+      database_size: undefined,
+      tables_name: [],
+      product_total: undefined,
+      log_event_total: undefined,
+      log_error_total: undefined,
+    };
+
+    const respCountProduct = await productRepository.countProduct();
+    LogDTO.json_log_event.methods.push(respCountProduct);
+
+    if (respCountProduct.was_error) {
+      respCountProduct.messages.forEach((message) => {
+        messages.push(message);
+      });
+      responseAPI.status = 500;
+    } else {
+      jsonDBInfo.product_total = respCountProduct.response;
+    }
+
+    if (!responseAPI.status) {
+      const respCountLogEvent = await logRepository.countLogEvent();
+      LogDTO.json_log_event.methods.push(respCountLogEvent);
+
+      if (respCountLogEvent.was_error) {
+        respCountLogEvent.messages.forEach((message) => {
+          messages.push(message);
+        });
+        responseAPI.status = 500;
+      } else {
+        jsonDBInfo.log_event_total = respCountLogEvent.response;
+      }
+    }
+
+    if (!responseAPI.status) {
+      const respCountLogError = await logRepository.countLogError();
+      LogDTO.json_log_event.methods.push(respCountLogError);
+
+      if (respCountLogError.was_error) {
+        respCountLogError.messages.forEach((message) => {
+          messages.push(message);
+        });
+        responseAPI.status = 500;
+      } else {
+        jsonDBInfo.log_error_total = respCountLogError.response;
+      }
+    }
+
+    if (!responseAPI.status) {
+      const respGetTableNames = await dbUtil.getTableNames();
+      LogDTO.json_log_event.methods.push(respGetTableNames);
+
+      if (respGetTableNames.was_error) {
+        respGetTableNames.messages.forEach((message) => {
+          messages.push(message);
+        });
+        responseAPI.status = 500;
+      } else {
+        const tableNames = respGetTableNames.response;
+        jsonDBInfo.tables_name = tableNames;
+      }
+    }
+
+    if (!responseAPI.status) {
+      const respGetDataBaseSize = await dbUtil.getSizeDatabase();
+      LogDTO.json_log_event.methods.push(respGetDataBaseSize);
+
+      if (respGetDataBaseSize.was_error) {
+        respGetDataBaseSize.messages.forEach((message) => {
+          messages.push(message);
+        });
+        responseAPI.status = 500;
+      } else {
+        const dataBaseSize = respGetDataBaseSize.response;
+        jsonDBInfo.database_size = `${dataBaseSize} mb`;
+      }
+    }
+
+    if (!responseAPI.status) {
+      jsonDBInfo.database_name = dbUtil.DataBaseFileName;
+      responseAPI.status = 200;
+    }
+
+    if (responseAPI.status === 500) {
+      responseAPI.body = { code_event: LogDTO.code_event, messages };
+      logService.info(JSON.stringify(responseAPI));
+    } else {
+      responseAPI.body = jsonDBInfo;
+    }
+
+    LogDTO.json_log_event.io_data.response_data = responseAPI;
+
+    await logRepository.saveLogEvent(LogDTO);
+    return res.status(responseAPI.status).json(responseAPI.body);
   }
 }
 
