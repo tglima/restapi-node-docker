@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import logService from '../../services/log.service';
+import constantUtil from '../../utils/constant.util';
 import dbUtil from '../../utils/db.util';
 import util from '../../utils/util';
 
@@ -86,6 +87,33 @@ class ProductRepository {
       returnMethod.error = error;
       returnMethod.error_message = error.message;
       logService.error(error);
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
+
+  async countProduct() {
+    const returnMethod = {
+      nm_method: 'countProduct',
+      dt_start: util.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+    };
+
+    try {
+      const qtItems = await this.#productDB.count();
+      returnMethod.info.push(`info: qtItems = ${qtItems}`);
+      returnMethod.response = qtItems;
+    } catch (error) {
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      logService.error(`method: ${returnMethod.nm_method} => Error: ${error}`);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
     }
 
     returnMethod.dt_finish = util.getDateNow();
