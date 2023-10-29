@@ -122,15 +122,18 @@ class LogRepository {
 
   saveLogError(logError) {
     try {
-      const exception = {
+      const errorStackArray = logError.error.stack.split('\n').map((line) => line.trim());
+
+      const json_log_error = JSON.stringify({
+        name: logError.error.name,
         message: logError.error.message,
-        stack_trace: logError.error.stack,
-      };
+        stack: errorStackArray,
+      });
 
       this.#logErrorDB.create({
         dt_register: util.getDateNow(),
         method: logError.method,
-        json_log_error: exception,
+        json_log_error,
       });
     } catch (error) {
       logService.info(`Error message: ${error.message}`);
