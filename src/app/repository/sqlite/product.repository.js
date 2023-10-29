@@ -46,57 +46,69 @@ class ProductRepository {
     );
   }
 
-  async getAllProducts() {
-    const returnMethod = {};
-    returnMethod.nm_method = 'getAllProducts';
-    returnMethod.dt_start = util.getDateNow();
-    returnMethod.dt_finish = null;
-    returnMethod.was_error = false;
-    returnMethod.response = null;
-    returnMethod.info = [];
+  async findAll() {
+    const returnMethod = {
+      nm_method: 'findAll',
+      dt_start: util.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+      messages: [],
+    };
 
     try {
-      const products = await this.#productDB.findAll();
-      returnMethod.response = !products ? null : products;
+      const resultDB = await this.#productDB.findAll();
+      let products;
+
+      if (resultDB) {
+        returnMethod.info.push(`info: qtdItems = ${resultDB.length}`);
+        products = {
+          products: resultDB.map((product) => product.toJSON()),
+        };
+      } else {
+        returnMethod.messages.push(constantUtil.MsgStatus404);
+      }
+
+      returnMethod.response = products;
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgStatus500);
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-
-      //
-      returnMethod.error = error;
-      returnMethod.error_message = error.message;
     }
 
     returnMethod.dt_finish = util.getDateNow();
     return returnMethod;
   }
 
-  async getProductById(id) {
-    const returnMethod = {};
-    returnMethod.nm_method = 'getProductById';
-    returnMethod.dt_start = util.getDateNow();
-    returnMethod.dt_finish = null;
-    returnMethod.was_error = false;
-    returnMethod.info = [{ id }];
-    returnMethod.response = null;
-    returnMethod.info = [];
+  async findById(id) {
+    const returnMethod = {
+      nm_method: 'findById',
+      dt_start: util.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+      messages: [],
+    };
+
+    returnMethod.info.push(`info: id = ${id}`);
 
     try {
-      const product = await this.#productDB.findByPk(id);
-      returnMethod.response = !product ? null : product;
+      const resultDB = await this.#productDB.findByPk(id);
+      const product = !resultDB ? null : resultDB.toJSON();
+      returnMethod.info.push(`info: product = ${product}`);
+      returnMethod.response = product;
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgStatus500);
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
-
-      //
-      returnMethod.error = error;
-      returnMethod.error_message = error.message;
     }
 
     returnMethod.dt_finish = util.getDateNow();
