@@ -4,109 +4,112 @@ import logService from '../services/log.service';
 import constantUtil from '../utils/constant.util';
 import util from '../utils/util';
 
-class ProductController {
-  async findAll(req, res) {
-    const LogDTO = {
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        methods: undefined,
-        request_data: undefined,
-        response_data: undefined,
-      },
-    };
+async function valFindById(id) {
+  const returnMethod = {
+    nm_method: 'valFindById',
+    dt_start: util.getDateNow(),
+    dt_finish: null,
+    was_error: null,
+    response: null,
+    info: [],
+    methods: [],
+    messages: [],
+  };
 
-    let responseAPI;
+  returnMethod.info.push(`info: id  = ${id}`);
+  id = +id;
 
-    const responseMethod = await productRepository.getAllProducts();
-    LogDTO.json_log_event.methods = [responseMethod];
-
-    if (responseMethod.error) {
-      responseAPI = {
-        status: 500,
-        body: { messages: [constantUtil.MsgStatus500] },
-      };
-    }
-
-    if (!responseAPI && !responseMethod.response) {
-      responseAPI = {
-        status: 404,
-        body: { messages: [constantUtil.MsgStatus404] },
-      };
-    }
-
-    if (!responseAPI) {
-      const products = {
-        products: responseMethod.response.map((product) => product.toJSON()),
-      };
-
-      responseAPI = { status: 200, body: products };
-    }
-
-    LogDTO.json_log_event.request_data = util.getRequestData(req);
-    LogDTO.json_log_event.response_data = responseAPI;
-
-    logService.info(JSON.stringify(LogDTO));
-    logRepository.saveLogEvent(LogDTO);
-    return res.status(responseAPI.status).json(responseAPI.body);
+  if (!id || !Number.isSafeInteger(id)) {
+    returnMethod.info.push('info: not Number.isSafeInteger');
+    returnMethod.messages.push(constantUtil.MsgInvalidID);
   }
 
-  async findById(req, res) {
+  returnMethod.info.push(`info: messages.length  = ${returnMethod.messages.length}`);
+
+  if (returnMethod.messages.length === 0) {
+    const respFindByById = await productRepository.findById(id);
+    returnMethod.methods.push(respFindByById);
+
+    if (respFindByById.was_error) {
+      returnMethod.was_error = true;
+      returnMethod.info.push(`info: was_error  = ${returnMethod.was_error}`);
+      returnMethod.messages.push(constantUtil.MsgStatus500);
+    }
+
+    if (!respFindByById.was_error && !respFindByById.response) {
+      returnMethod.messages.push(constantUtil.MsgStatus404);
+    }
+
+    if (!respFindByById.was_error && respFindByById.response) {
+      returnMethod.response = respFindByById.response;
+    }
+  }
+
+  returnMethod.dt_finish = util.getDateNow();
+  return returnMethod;
+}
+
+class ProductController {
+  async find(req, res) {
     const LogDTO = {
+      code_event: util.getNewCodeEvent(),
       dt_start: util.getDateNow(),
       dt_finish: undefined,
       type_event: TypesEvent.REQUEST,
       json_log_event: {
-        methods: undefined,
-        request_data: undefined,
-        response_data: undefined,
+        io_data: {
+          request_data: util.getRequestData(req),
+          response_data: undefined,
+        },
+        methods: [],
       },
     };
 
-    let responseAPI;
+    const messages = [];
+    const responseAPI = { status: undefined, body: undefined };
 
-    let { id } = req.params;
-    id = +id;
+    let respFind;
+    const { id } = req.query;
 
-    if (!id || !Number.isSafeInteger(id)) {
-      responseAPI = {
-        status: 400,
-        body: { messages: [constantUtil.MsgInvalidID] },
-      };
+    if (id) {
+      const respValfindById = await valFindById(id);
+      LogDTO.json_log_event.methods.push(respValfindById);
+      respValfindById.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      respFind = respValfindById;
+    } else {
+      const respFindAll = await productRepository.findAll();
+      LogDTO.json_log_event.methods.push(respFindAll);
+      respFindAll.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      respFind = respFindAll;
     }
 
-    if (!responseAPI) {
-      const responseMethod = await productRepository.getProductById(id);
-      LogDTO.json_log_event.methods = [responseMethod];
-
-      if (responseMethod.error) {
-        responseAPI = {
-          status: 500,
-          body: { messages: [constantUtil.MsgStatus500] },
-        };
-      }
-
-      if (!responseAPI && !responseMethod.response) {
-        responseAPI = {
-          status: 404,
-          body: { messages: [constantUtil.MsgStatus404] },
-        };
-      }
-
-      if (!responseAPI) {
-        responseAPI = {
-          status: 200,
-          body: responseMethod.response.toJSON(),
-        };
-      }
+    if (respFind.was_error) {
+      responseAPI.status = 500;
     }
 
-    LogDTO.json_log_event.request_data = util.getRequestData(req);
-    LogDTO.json_log_event.response_data = responseAPI;
+    if (!respFind.was_error && !respFind.response) {
+      responseAPI.status = 400;
+    }
 
-    logService.info(JSON.stringify(LogDTO));
-    logRepository.saveLogEvent(LogDTO);
+    if (!respFind.was_error && respFind.response) {
+      responseAPI.status = 200;
+      responseAPI.body = respFind.response;
+    }
+
+    if (responseAPI.status !== 200) {
+      responseAPI.body = { code_event: LogDTO.code_event, messages };
+      logService.info(JSON.stringify(responseAPI));
+    }
+
+    LogDTO.json_log_event.io_data.response_data = responseAPI;
+
+    await logRepository.saveLogEvent(LogDTO);
     return res.status(responseAPI.status).json(responseAPI.body);
   }
 }

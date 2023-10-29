@@ -4,8 +4,7 @@ import productController from '../controllers/product.controller';
 class ProductRoutes {
   constructor() {
     this.router = Router();
-    this.router.get('/product/find', productController.findAll);
-    this.router.get('/product/find/id=:id?', productController.findById);
+    this.router.get('/products/find', productController.find);
   }
 
   getRoutes() {
