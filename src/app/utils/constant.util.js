@@ -21,6 +21,9 @@ class ConstantUtil {
     this.MsgDateTimeIsEmpty = 'A data fornecida está vazia ou nula';
     this.MsgInvalidQueryParams = 'Os parametros informados não são válidos';
     this.MsgInvalidValue = 'o valor informado é inválido!';
+    this.MsgErrorCreateZip = 'Ocorreu um erro na geração do arquivo zip';
+    this.MsgErrorFindDb = 'Ocorreu um erro ao buscar o banco de dados';
+    this.MsgFailGetFile = 'Falha ao obter o arquivo';
     this.CodeEventFormatRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?!.*--)(?!.*[0-9-]{21,})(?!.*\s).{20,}$/;
     this.ApiKeyFormatRegex = /^(?=[a-zA-Z\d-]{15,}$)(?!.*([a-zA-Z\d-])\1{2,})(?!.*\s)/;
     this.SQliteQueryFindByApiKey = `json_extract(json_log_event, '$.io_data.request_data.headers."api-key"') = '{{VALUE}}'`;
