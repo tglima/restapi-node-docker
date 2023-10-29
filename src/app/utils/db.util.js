@@ -5,7 +5,9 @@ let instance;
 
 class DbUtil {
   constructor() {
-    const dbPathSqLite = path.join(__dirname, '..', 'assets', 'database.db');
+    this.DataBaseFileName = process.env.DATABASE_FILE_NAME || 'database.db';
+
+    const dbPathSqLite = path.join(__dirname, '..', 'assets', this.DataBaseFileName);
     this.SQLite = new Sequelize({
       dialect: 'sqlite',
       storage: dbPathSqLite,
