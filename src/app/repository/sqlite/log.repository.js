@@ -196,8 +196,8 @@ class LogRepository {
         returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
       }
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
@@ -216,6 +216,7 @@ class LogRepository {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     const offset = (page - 1) * this.#qtLimitResult;
@@ -243,8 +244,8 @@ class LogRepository {
         returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
       }
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
@@ -255,20 +256,25 @@ class LogRepository {
   }
 
   async findByCodeEvent(codeEvent) {
-    const returnMethod = {};
-    returnMethod.nm_method = 'findByCodeEvent';
-    returnMethod.dt_start = util.getDateNow();
-    returnMethod.dt_finish = null;
-    returnMethod.was_error = false;
-    returnMethod.info = [{ codeEvent }];
-    returnMethod.response = null;
+    const returnMethod = {
+      nm_method: 'findByCodeEvent',
+      dt_start: util.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+      messages: [],
+    };
+
+    returnMethod.info.push(`info: codeEvent = ${codeEvent}`);
 
     try {
       const logDB = await this.#logEventDB.findOne({ where: { code_event: codeEvent } });
       returnMethod.response = !logDB ? null : formartResultLogDB(logDB);
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
@@ -287,6 +293,7 @@ class LogRepository {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     try {
@@ -294,10 +301,9 @@ class LogRepository {
       returnMethod.info.push(`info: qtItems = ${qtItems}`);
       returnMethod.response = qtItems;
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
-      returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.was_error = true;
       returnMethod.response = null;
     }
@@ -315,6 +321,7 @@ class LogRepository {
       response: null,
       info: [],
       methods: [],
+      messages: [],
     };
 
     try {
@@ -322,7 +329,6 @@ class LogRepository {
       returnMethod.info.push(`info: qtItems = ${qtItems}`);
       returnMethod.response = qtItems;
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);

@@ -40,6 +40,7 @@ class Util {
       was_error: null,
       response: null,
       info: [],
+      methods: [],
       messages: [],
     };
 
@@ -78,7 +79,6 @@ class Util {
 
       returnMethod.response = filePath;
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErrorCreateZip);

@@ -29,10 +29,9 @@ async function getZipDataBase(codeEvent) {
     filePath = path.join(__dirname, '..', 'assets', dbUtil.DataBaseFileName);
     fileData = await readFile(filePath);
   } catch (error) {
-    logService.info(`Error message: ${error.message}`);
     await logService.error({ method: returnMethod.nm_method, error });
-    returnMethod.info.push(`Error message: ${error.message}`);
     returnMethod.messages.push(constant.MsgErrorFindDb);
+    returnMethod.info.push(`Error message: ${error.message}`);
     returnMethod.was_error = true;
     returnMethod.response = null;
   }

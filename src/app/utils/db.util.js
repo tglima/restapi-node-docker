@@ -39,7 +39,6 @@ class DbUtil {
       returnMethod.info.push(`info: tableNames = ${JSON.stringify(tableNames)}`);
       returnMethod.response = tableNames;
     } catch (error) {
-      logService.info(`Error message: ${error.message}`);
       await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
