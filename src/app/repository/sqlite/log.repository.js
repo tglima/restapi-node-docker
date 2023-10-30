@@ -1,8 +1,8 @@
 import { DataTypes, Op, Sequelize, literal } from 'sequelize';
 import logService from '../../services/log.service';
+import util from '../../utils';
 import constantUtil from '../../utils/constant.util';
 import dbUtil from '../../utils/db.util';
-import util from '../../utils/util';
 
 function formatRowsJsonLogEvent(rows) {
   rows.forEach((item) => {

@@ -5,9 +5,9 @@ import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
 import productRepository from '../repository/sqlite/product.repository';
 import logService from '../services/log.service';
 import validator from '../services/validator.services';
+import util from '../utils';
 import constant from '../utils/constant.util';
 import dbUtil from '../utils/db.util';
-import util from '../utils/util';
 
 async function getZipDataBase(codeEvent) {
   const returnMethod = {

@@ -1,8 +1,8 @@
 import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
 import productRepository from '../repository/sqlite/product.repository';
 import logService from '../services/log.service';
+import util from '../utils';
 import constantUtil from '../utils/constant.util';
-import util from '../utils/util';
 
 async function valFindById(id) {
   const returnMethod = {

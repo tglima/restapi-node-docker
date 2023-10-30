@@ -5,9 +5,9 @@ import Youch from 'youch';
 import routes from './routes';
 import authServices from './services/auth.services';
 import logService from './services/log.service';
+import util from './utils';
 import constantUtil from './utils/constant.util';
 import dbUtil from './utils/db.util';
-import util from './utils/util';
 
 class App {
   constructor() {

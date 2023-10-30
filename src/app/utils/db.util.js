@@ -1,7 +1,7 @@
 import { stat } from 'fs/promises';
+import util from '.';
 import logService from '../services/log.service';
 import constantUtil from './constant.util';
-import util from './util';
 
 const { Sequelize } = require('sequelize');
 const path = require('path');

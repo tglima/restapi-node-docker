@@ -1,6 +1,6 @@
 import moment from 'moment-timezone';
+import util from '../utils';
 import constantUtil from '../utils/constant.util';
-import util from '../utils/util';
 import logService from './log.service';
 
 let instance;

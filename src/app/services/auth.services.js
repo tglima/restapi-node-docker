@@ -1,5 +1,5 @@
 import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
-import util from '../utils/util';
+import util from '../utils';
 import logService from './log.service';
 import validatorServices from './validator.services';
 
