@@ -460,6 +460,83 @@ class ManagerController {
     await logRepository.saveLogEvent(LogDTO);
     return res.status(responseAPI.status).json(responseAPI.body);
   }
+
+  async delRowsDatabase(req, res) {
+    const LogDTO = {
+      code_event: util.getNewCodeEvent(),
+      dt_start: util.getDateNow(),
+      dt_finish: undefined,
+      type_event: TypesEvent.REQUEST,
+      json_log_event: {
+        io_data: {
+          request_data: util.getRequestData(req),
+          response_data: undefined,
+        },
+        methods: [],
+        info: [],
+      },
+    };
+
+    const responseAPI = { status: undefined, body: undefined };
+    const messages = [];
+    let { table_name } = req.query;
+
+    LogDTO.json_log_event.info.push(`table_name = ${table_name}`);
+
+    table_name = table_name ? table_name.toLowerCase() : undefined;
+
+    const validTableNames = ['log_event', 'log_error'];
+
+    if (!table_name || !validTableNames.includes(table_name)) {
+      LogDTO.json_log_event.info.push('table_name invalid');
+      responseAPI.status = 400;
+      messages.push(constant.MsgInvalidID.replace('id', 'table_name'));
+    }
+
+    if (table_name === 'log_event') {
+      const respDeleteLogEvent = await logRepository.deleteLogEvent();
+      LogDTO.json_log_event.methods.push(respDeleteLogEvent);
+
+      respDeleteLogEvent.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      if (respDeleteLogEvent.was_error) {
+        responseAPI.status = 500;
+        messages.push(constant.MsgStatus500);
+      } else {
+        responseAPI.status = 200;
+      }
+    }
+
+    if (table_name === 'log_error') {
+      const respDeleteLogError = await logRepository.deleteLogError();
+      LogDTO.json_log_event.methods.push(respDeleteLogError);
+
+      respDeleteLogError.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      if (respDeleteLogError.was_error) {
+        responseAPI.status = 500;
+        messages.push(constant.MsgStatus500);
+      } else {
+        responseAPI.status = 200;
+      }
+    }
+
+    if (responseAPI.status !== 200) {
+      responseAPI.body = { code_event: LogDTO.code_event, messages };
+      logService.info(JSON.stringify(responseAPI));
+    } else {
+      responseAPI.body = { messages };
+    }
+
+    LogDTO.json_log_event.io_data.response_data = responseAPI;
+
+    await logRepository.saveLogEvent(LogDTO);
+    return res.status(responseAPI.status).json(responseAPI.body);
+  }
 }
 
 export default new ManagerController();
