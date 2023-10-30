@@ -26,6 +26,8 @@ class ConstantUtil {
     this.MsgFailGetFile = 'Falha ao obter o arquivo';
     this.MsgErrorGetInfoFile = 'Falha ao obter informações do arquivo';
     this.MsgErroDatabaseQuery = 'Ocorreu um erro durante a consulta no banco de dados';
+    this.MsgDatabaseDeleteRows = 'Os {{VALUE}} registros mais antigos foram excluídos com sucesso';
+    this.MsgDatabaseNoDelete = 'Não foram encontrados registros para serem deletados';
     this.CodeEventFormatRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?!.*--)(?!.*[0-9-]{21,})(?!.*\s).{20,}$/;
     this.ApiKeyFormatRegex = /^(?=[a-zA-Z\d-]{15,}$)(?!.*([a-zA-Z\d-])\1{2,})(?!.*\s)/;
     this.SQliteQueryFindByApiKey = `json_extract(json_log_event, '$.io_data.request_data.headers."api-key"') = '{{VALUE}}'`;
