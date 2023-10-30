@@ -49,6 +49,7 @@ class LogRepository {
     this.#defineLogEvent();
     this.#defineLogError();
     this.#qtLimitResult = +process.env.QT_LIMIT_RESULT || 10;
+    this.#qtLimitDelete = +process.env.QT_LIMIT_DELETE || 10;
   }
 
   #dbUtil;
@@ -58,6 +59,8 @@ class LogRepository {
   #logErrorDB;
 
   #qtLimitResult;
+
+  #qtLimitDelete;
 
   #defineLogEvent() {
     this.#logEventDB = this.#dbUtil.SQLite.define(
@@ -283,6 +286,91 @@ class LogRepository {
       const qtItems = await this.#logErrorDB.count();
       returnMethod.info.push(`info: qtItems = ${qtItems}`);
       returnMethod.response = qtItems;
+    } catch (error) {
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
+
+  async deleteLogError() {
+    const returnMethod = util.getReturnMethod('deleteLogError');
+
+    try {
+      const rowsToDelete = await this.#logErrorDB.findAll({
+        order: [['dt_register', 'ASC']],
+        limit: this.#qtLimitDelete,
+      });
+
+      returnMethod.info.push(`info: rowsToDelete.length = ${rowsToDelete.length}`);
+
+      if (rowsToDelete.length > 0) {
+        const idsToDelete = rowsToDelete.map((row) => row.id_log_error);
+        returnMethod.info.push(`info: idsToDelete = ${idsToDelete}`);
+
+        await this.#logErrorDB.destroy({
+          where: {
+            id_log_error: {
+              [Op.in]: idsToDelete,
+            },
+          },
+        });
+
+        const msgDeleteRows = constantUtil.MsgDatabaseDeleteRows.replace('{{VALUE}}', rowsToDelete.length);
+        returnMethod.messages.push(msgDeleteRows);
+      } else {
+        returnMethod.info.push('info: No records to delete');
+        returnMethod.messages.push(constantUtil.MsgDatabaseNoDelete);
+      }
+
+      returnMethod.response = true;
+    } catch (error) {
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
+
+  async deleteLogEvent() {
+    const returnMethod = util.getReturnMethod('deleteLogEvent');
+
+    try {
+      const rowsToDelete = await this.#logEventDB.findAll({
+        order: [['dt_start', 'ASC']],
+        limit: this.#qtLimitDelete,
+      });
+
+      // Feito assim, pois sempre teremos pelo menos 1 registro na tabela.
+      if (rowsToDelete.length > 1) {
+        const idsToDelete = rowsToDelete.map((row) => row.id_log_event);
+        returnMethod.info.push(`info: idsToDelete = ${idsToDelete}`);
+
+        await this.#logEventDB.destroy({
+          where: {
+            id_log_event: {
+              [Op.in]: idsToDelete,
+            },
+          },
+        });
+
+        const msgDeleteRows = constantUtil.MsgDatabaseDeleteRows.replace('{{VALUE}}', rowsToDelete.length);
+        returnMethod.messages.push(msgDeleteRows);
+      } else {
+        returnMethod.info.push('info: No records to delete');
+        returnMethod.messages.push(constantUtil.MsgDatabaseNoDelete);
+      }
+
+      returnMethod.response = true;
     } catch (error) {
       await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.info.push(`Error message: ${error.message}`);
