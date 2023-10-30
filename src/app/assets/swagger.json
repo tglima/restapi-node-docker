@@ -20,7 +20,7 @@
       }
    ],
    "paths":{
-      "/product/find":{
+      "/products/find":{
          "get":{
             "summary":"Busca todos produtos disponíveis",
             "description":"Rota para obter todos os produtos disponíveis",
@@ -60,16 +60,16 @@
                      }
                   }
                },
-               "404":{
-                  "description":"Não encontrado",
+               "400":{
+                  "description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
                   "content":{
                      "application/json":{
                         "schema":{
                            "$ref":"#/components/schemas/DefApiResponse"
                         },
                         "examples":{
-                           "notFound":{
-                              "$ref":"#/components/examples/notFound"
+                           "invalidRequest":{
+                              "$ref":"#/components/examples/invalidRequest"
                            }
                         }
                      }
@@ -78,7 +78,7 @@
             }
          }
       },
-      "/product/find/id={id}":{
+      "/products/find?id={id}":{
          "get":{
             "summary":"Busca o produto pelo ID",
             "description":"Rota para obter o produto de acordo com o seu id",
@@ -116,7 +116,7 @@
                   }
                },
                "400":{
-                  "description":"Falha na Requisição",
+                  "description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
                   "content":{
                      "application/json":{
                         "schema":{
@@ -144,21 +144,6 @@
                         }
                      }
                   }
-               },
-               "404":{
-                  "description":"Não encontrado",
-                  "content":{
-                     "application/json":{
-                        "schema":{
-                           "$ref":"#/components/schemas/DefApiResponse"
-                        },
-                        "examples":{
-                           "notFound":{
-                              "$ref":"#/components/examples/notFound"
-                           }
-                        }
-                     }
-                  }
                }
             }
          }
@@ -169,6 +154,9 @@
          "DefApiResponse":{
             "type":"object",
             "properties":{
+               "code_event": {
+                  "type": "string"
+                },
                "messages":{
                   "type":"array",
                   "items":{
@@ -221,13 +209,15 @@
       "examples":{
          "authFailed":{
             "value":{
+              "code_event": "b000b00a-ab00-0000-b000-bb000b000000",
                "messages":[
-                  "Credenciais inválidas!"
+                  "Credenciais inválidas ou ausentes"
                ]
             }
          },
          "invalidRequest":{
             "value":{
+              "code_event": "b000b00a-ab00-0000-b000-bb000b000000",
                "messages":[
                   "Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!"
                ]
@@ -235,6 +225,7 @@
          },
          "notFound":{
             "value":{
+              "code_event": "b000b00a-ab00-0000-b000-bb000b000000",
                "messages":[
                   "Item não encontrado!"
                ]
@@ -249,6 +240,7 @@
          },
          "serverError":{
             "value":{
+              "code_event": "b000b00a-ab00-0000-b000-bb000b000000",
                "messages":[
                   "Erro interno no servidor!"
                ]
@@ -256,8 +248,9 @@
          },
          "unauthorized":{
             "value":{
+              "code_event": "b000b00a-ab00-0000-b000-bb000b000000",
                "messages":[
-                  "Usuário sem permissão ou Token inválido!"
+                  "Credenciais inválidas ou ausentes!"
                ]
             }
          }
