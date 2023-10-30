@@ -5,16 +5,7 @@ import util from '../utils';
 import constantUtil from '../utils/constant.util';
 
 async function valFindById(id) {
-  const returnMethod = {
-    nm_method: 'valFindById',
-    dt_start: util.getDateNow(),
-    dt_finish: null,
-    was_error: null,
-    response: null,
-    info: [],
-    methods: [],
-    messages: [],
-  };
+  const returnMethod = util.getReturnMethod('valFindById');
 
   returnMethod.info.push(`info: id  = ${id}`);
   id = +id;

@@ -162,16 +162,7 @@ class LogRepository {
   }
 
   async findByDateRange(dt_start, dt_finish, page) {
-    const returnMethod = {
-      nm_method: 'findByDateRange',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('findByDateRange');
 
     const offset = (page - 1) * this.#qtLimitResult;
 
@@ -208,16 +199,7 @@ class LogRepository {
   }
 
   async findByApiKey(api_key, page) {
-    const returnMethod = {
-      nm_method: 'findByApiKey',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('findByApiKey');
 
     const offset = (page - 1) * this.#qtLimitResult;
 
@@ -256,16 +238,7 @@ class LogRepository {
   }
 
   async findByCodeEvent(codeEvent) {
-    const returnMethod = {
-      nm_method: 'findByCodeEvent',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('findByCodeEvent');
 
     returnMethod.info.push(`info: codeEvent = ${codeEvent}`);
 
@@ -285,16 +258,7 @@ class LogRepository {
   }
 
   async countLogEvent() {
-    const returnMethod = {
-      nm_method: 'countLogEvent',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('countLogEvent');
 
     try {
       const qtItems = await this.#logEventDB.count();
@@ -313,16 +277,7 @@ class LogRepository {
   }
 
   async countLogError() {
-    const returnMethod = {
-      nm_method: 'countLogError',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('countLogError');
 
     try {
       const qtItems = await this.#logErrorDB.count();

@@ -46,16 +46,7 @@ class Util {
   }
 
   async createZip(fileData, fileNameCompress, fileNameZip) {
-    const returnMethod = {
-      nm_method: 'createZip',
-      dt_start: this.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = this.getReturnMethod('createZip');
 
     const levelCompress = +process.env.LEVEL_COMPRESS_FILE || 5;
 

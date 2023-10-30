@@ -47,16 +47,7 @@ class ProductRepository {
   }
 
   async findAll() {
-    const returnMethod = {
-      nm_method: 'findAll',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('findAll');
 
     try {
       const resultDB = await this.#productDB.findAll();
@@ -85,16 +76,7 @@ class ProductRepository {
   }
 
   async findById(id) {
-    const returnMethod = {
-      nm_method: 'findById',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('findById');
 
     returnMethod.info.push(`info: id = ${id}`);
 
@@ -116,16 +98,7 @@ class ProductRepository {
   }
 
   async countProduct() {
-    const returnMethod = {
-      nm_method: 'countProduct',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('countProduct');
 
     try {
       const qtItems = await this.#productDB.count();

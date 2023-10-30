@@ -10,16 +10,7 @@ import constant from '../utils/constant.util';
 import dbUtil from '../utils/db.util';
 
 async function getZipDataBase(codeEvent) {
-  const returnMethod = {
-    nm_method: 'getZipDataBase',
-    dt_start: util.getDateNow(),
-    dt_finish: null,
-    was_error: null,
-    response: null,
-    info: [],
-    methods: [],
-    messages: [],
-  };
+  const returnMethod = util.getReturnMethod('getZipDataBase');
 
   returnMethod.info.push(`info: database = ${dbUtil.DataBaseFileName}`);
   let filePath;
@@ -66,16 +57,7 @@ async function getZipDataBase(codeEvent) {
 }
 
 function getResponseAPIRespFind(respFind, code_event) {
-  const returnMethod = {
-    nm_method: 'getResponseAPIRespFind',
-    dt_start: util.getDateNow(),
-    dt_finish: null,
-    was_error: null,
-    response: false,
-    info: [],
-    methods: [],
-    messages: [],
-  };
+  const returnMethod = util.getReturnMethod('getResponseAPIRespFind');
 
   returnMethod.info.push(`info: respFind = ${respFind}`);
 
@@ -156,16 +138,7 @@ function valFindByApiKey(api_key, page) {
 }
 
 function valFindByDateTime(dt_start, dt_finish, page) {
-  const returnMethod = {
-    nm_method: 'valFindByDateTime',
-    dt_start: util.getDateNow(),
-    dt_finish: null,
-    was_error: null,
-    response: null,
-    info: [],
-    methods: [],
-    messages: [],
-  };
+  const returnMethod = util.getReturnMethod('valFindByDateTime');
 
   let isValidNuPage = true;
   let isValidDtStart = true;
@@ -206,7 +179,7 @@ function valFindByDateTime(dt_start, dt_finish, page) {
     returnMethod.methods.push(respValDateTimeRange);
     if (!respValDateTimeRange.response) {
       isValidRangeDate = false;
-      returnMethod.messages.push(`dt_start e dt_finish: ${respValDateTimeRange.message}`);
+      returnMethod.messages.push(`dt_start e dt_finish: ${respValDateTimeRange.message[0]}`);
     }
   }
 

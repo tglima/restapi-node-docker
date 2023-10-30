@@ -13,15 +13,7 @@ class ValidatorService {
   #DateTimeFormat;
 
   validateDateTime(dateTime) {
-    const returnMethod = {
-      nm_method: 'validateDateTime',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('validateDateTime');
 
     returnMethod.info.push(`info: dateTime = ${dateTime}`);
     returnMethod.response = true;
@@ -41,19 +33,12 @@ class ValidatorService {
   }
 
   valDateTimeRange(startDate, finishDate) {
-    const returnMethod = {
-      nm_method: 'valDateTimeRange',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      message: '',
-    };
+    const returnMethod = util.getReturnMethod('valDateTimeRange');
+
     returnMethod.info.push(`info: startDate = ${startDate} finishDate = ${finishDate}`);
 
     if (moment(startDate, this.#DateTimeFormat).isAfter(moment(finishDate, this.#DateTimeFormat))) {
-      returnMethod.message = constantUtil.MsgInvalidDateTimeRange;
+      returnMethod.message.push(constantUtil.MsgInvalidDateTimeRange);
       returnMethod.response = false;
     }
 
@@ -69,15 +54,7 @@ class ValidatorService {
   }
 
   validatePage(page) {
-    const returnMethod = {
-      nm_method: 'validatePage',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('validatePage');
 
     returnMethod.response = true;
     returnMethod.info.push(`info: page = ${page}`);
@@ -92,15 +69,7 @@ class ValidatorService {
   }
 
   validateCodeEvent(codeEvent) {
-    const returnMethod = {
-      nm_method: 'validateCodeEvent',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('validateCodeEvent');
 
     returnMethod.response = true;
     returnMethod.info.push(`info: codeEvent = ${codeEvent}`);
@@ -115,15 +84,7 @@ class ValidatorService {
   }
 
   valFormatApiKey(apiKey) {
-    const returnMethod = {
-      nm_method: 'valFormatApiKey',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('valFormatApiKey');
 
     returnMethod.response = true;
     returnMethod.info.push(`info: apiKey = ${apiKey}`);
@@ -138,15 +99,7 @@ class ValidatorService {
   }
 
   validateRequest(req) {
-    const returnMethod = {
-      nm_method: 'validateRequest',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('validateRequest');
 
     const publicRoutes = ['/swagger', '/health-check/'];
     const validKeys = process.env.API_KEY.split(';');

@@ -23,16 +23,7 @@ class DbUtil {
   #dbPathSQLite;
 
   async getTableNames() {
-    const returnMethod = {
-      nm_method: 'getTableNames',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('getTableNames');
 
     try {
       const tableNames = await this.SQLite.getQueryInterface().showAllTables();
@@ -50,16 +41,7 @@ class DbUtil {
   }
 
   async getDataBaseSize() {
-    const returnMethod = {
-      nm_method: 'getDataBaseSize',
-      dt_start: util.getDateNow(),
-      dt_finish: null,
-      was_error: null,
-      response: null,
-      info: [],
-      methods: [],
-      messages: [],
-    };
+    const returnMethod = util.getReturnMethod('getDataBaseSize');
 
     try {
       const stats = await stat(this.#dbPathSQLite);
