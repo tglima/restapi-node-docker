@@ -32,6 +32,19 @@ class Util {
     };
   }
 
+  getReturnMethod(nm_method) {
+    return {
+      nm_method,
+      dt_start: this.getDateNow(),
+      dt_finish: null,
+      was_error: null,
+      response: null,
+      info: [],
+      methods: [],
+      messages: [],
+    };
+  }
+
   async createZip(fileData, fileNameCompress, fileNameZip) {
     const returnMethod = {
       nm_method: 'createZip',
