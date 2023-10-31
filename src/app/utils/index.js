@@ -99,7 +99,7 @@ class Util {
   }
 
   rateLimitAPI(qtMaxRate) {
-    const qtMaxRateDef = process.env.QT_MAX_RATE_MINUTE || 180;
+    const qtMaxRateDef = process.env.QT_MAX_RATE_MINUTE || 300;
 
     qtMaxRate = !qtMaxRate ? qtMaxRateDef : +qtMaxRate;
 
