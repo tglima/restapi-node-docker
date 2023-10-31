@@ -102,7 +102,9 @@ class ValidatorService {
     const returnMethod = util.getReturnMethod('validateRequest');
 
     const publicRoutes = ['/swagger', '/health-check/'];
+    const mngRoutes = ['/mng/'];
     const validKeys = process.env.API_KEY.split(';');
+    const validMngAuth = process.env.MNG_AUTHENTICATION.split(';');
 
     returnMethod.info.push(`info: req.originalUrl = ${req.originalUrl}`);
 
@@ -117,6 +119,7 @@ class ValidatorService {
     }
 
     const apiKey = !req.header('api-key') ? req.header('API-KEY') : req.header('api-key');
+    const mngAuth = !req.header('authorization') ? req.header('AUTHORIZATION') : req.header('authorization');
 
     returnMethod.info.push(`info: apiKey from header = ${apiKey}`);
 
@@ -133,6 +136,13 @@ class ValidatorService {
     if (!returnMethod.response) {
       logService.info(JSON.stringify(returnMethod));
       returnMethod.messages.push(`api-key: ${constantUtil.MsgStatus401}`);
+    }
+
+    if (returnMethod.response && mngRoutes.some((route) => urlBase.includes(route))) {
+      if (!validMngAuth.includes(mngAuth)) {
+        returnMethod.messages.push(`authentication: ${constantUtil.MsgStatus401}`);
+        returnMethod.response = false;
+      }
     }
 
     returnMethod.dt_finish = util.getDateNow();
