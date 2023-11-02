@@ -2,7 +2,7 @@
 import { readFile } from 'fs/promises';
 import path from 'path';
 import logRepository, { TypesEvent } from '../repository/log.repository';
-import productRepository from '../repository/sqlite/product.repository';
+import productRepository from '../repository/product.repository';
 import logService from '../services/log.service';
 import validator from '../services/validator.services';
 import util from '../utils';
