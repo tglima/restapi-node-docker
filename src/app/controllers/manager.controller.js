@@ -443,7 +443,7 @@ class ManagerController {
         responseAPI.status = 500;
       } else {
         const dataBaseSize = respGetDataBaseSize.response;
-        jsonDBInfo.database_size = `${dataBaseSize} mb`;
+        jsonDBInfo.database_size = `${dataBaseSize}mb`;
       }
     }
 

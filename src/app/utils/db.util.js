@@ -46,7 +46,7 @@ class DbUtil {
     try {
       const stats = await stat(this.#dbPathSQLite);
       const fileSizeInBytes = stats.size;
-      const fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024); // Tamanho em megabytes
+      const fileSizeInMegabytes = (fileSizeInBytes / (1024 * 1024)).toFixed(2); // Tamanho em megabytes
       returnMethod.info.push(`info: fileSizeInMegabytes = ${fileSizeInMegabytes}`);
       returnMethod.response = fileSizeInMegabytes;
     } catch (error) {
