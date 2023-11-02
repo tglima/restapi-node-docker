@@ -42,19 +42,7 @@ async function valFindById(id) {
 
 class ProductController {
   async find(req, res) {
-    const LogDTO = {
-      code_event: util.getNewCodeEvent(),
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        io_data: {
-          request_data: util.getRequestData(req),
-          response_data: undefined,
-        },
-        methods: [],
-      },
-    };
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
 
     const messages = [];
     const responseAPI = { status: undefined, body: undefined };

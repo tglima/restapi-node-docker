@@ -5,20 +5,7 @@ import validatorServices from './validator.services';
 
 class AuthService {
   async checkAuth(req, res, next) {
-    const LogDTO = {
-      code_event: util.getNewCodeEvent(),
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        io_data: {
-          request_data: util.getRequestData(req),
-          response_data: undefined,
-        },
-        methods: [],
-      },
-    };
-
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
     const messages = [];
     const respValidateRequest = validatorServices.validateRequest(req);
 

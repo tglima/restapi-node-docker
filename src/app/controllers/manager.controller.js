@@ -197,19 +197,7 @@ function valFindByDateTime(dt_start, dt_finish, page) {
 
 class ManagerController {
   async findLogEvent(req, res) {
-    const LogDTO = {
-      code_event: util.getNewCodeEvent(),
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        io_data: {
-          request_data: util.getRequestData(req),
-          response_data: undefined,
-        },
-        methods: [],
-      },
-    };
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
 
     let responseAPI = {};
     let respFindDB;
@@ -293,20 +281,7 @@ class ManagerController {
   }
 
   async getDataBaseFile(req, res) {
-    const LogDTO = {
-      code_event: util.getNewCodeEvent(),
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        io_data: {
-          request_data: util.getRequestData(req),
-          response_data: undefined,
-        },
-        methods: [],
-      },
-    };
-
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
     const messages = [];
     const responseAPI = {};
     let zipPath = null;
@@ -349,20 +324,7 @@ class ManagerController {
   }
 
   async getDataBaseInfo(req, res) {
-    const LogDTO = {
-      code_event: util.getNewCodeEvent(),
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        io_data: {
-          request_data: util.getRequestData(req),
-          response_data: undefined,
-        },
-        methods: [],
-      },
-    };
-
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
     const messages = [];
     const responseAPI = { status: undefined, body: undefined };
     const jsonDBInfo = {
@@ -466,20 +428,7 @@ class ManagerController {
   }
 
   async delRowsDatabase(req, res) {
-    const LogDTO = {
-      code_event: util.getNewCodeEvent(),
-      dt_start: util.getDateNow(),
-      dt_finish: undefined,
-      type_event: TypesEvent.REQUEST,
-      json_log_event: {
-        io_data: {
-          request_data: util.getRequestData(req),
-          response_data: undefined,
-        },
-        methods: [],
-        info: [],
-      },
-    };
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
 
     const responseAPI = { status: undefined, body: undefined };
     const messages = [];
