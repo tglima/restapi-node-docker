@@ -48,6 +48,9 @@ class App {
 
   #loadRoutes() {
     this.server.use(routes);
+    this.server.use((req, res, next) => {
+      res.status(404).send();
+    });
   }
 
   #exceptionHandler() {
