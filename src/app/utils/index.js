@@ -1,6 +1,6 @@
 import archiver from 'archiver';
 import { rateLimit } from 'express-rate-limit';
-import { createWriteStream, existsSync } from 'fs';
+import { createWriteStream, existsSync, readdirSync, statSync, unlinkSync } from 'fs';
 import { mkdir } from 'fs/promises';
 import moment from 'moment-timezone';
 import path from 'path';
@@ -92,6 +92,51 @@ class Util {
 
     if (!returnMethod.response) {
       logService.info(JSON.stringify(returnMethod));
+    }
+
+    returnMethod.dt_finish = this.getDateNow();
+    return returnMethod;
+  }
+
+  async deleteOldZip() {
+    const folderPath = path.join(__dirname, '..', 'assets', 'temp');
+    const files = readdirSync(folderPath);
+    const maxAllowedMsServer = (+process.env.MAX_ALLOWED_MIN_SERVER || 5) * 60 * 1000;
+    const returnMethod = this.getReturnMethod('deleteOldZip');
+    const deletedFiles = [];
+    const serverFiles = [];
+
+    returnMethod.info.push(`info: maxAllowedMsServer = ${maxAllowedMsServer}`);
+
+    try {
+      files.forEach((file) => {
+        const filePath = path.join(folderPath, file);
+        const fileStat = statSync(filePath);
+        const fileExtension = path.extname(filePath);
+        const timeDifference = new Date().getTime() - fileStat.ctimeMs;
+        serverFiles.push(file);
+
+        if (fileStat.isFile() && fileExtension === '.zip' && timeDifference > maxAllowedMsServer) {
+          deletedFiles.push(file);
+          unlinkSync(filePath);
+        }
+      });
+
+      returnMethod.response = true;
+    } catch (error) {
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.messages.push(constantUtil.MsgErrorDeleteOldZip);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.info.push(`info: totalServerFiles = ${serverFiles.length}`);
+    returnMethod.info.push(`info: serverFiles = ${serverFiles.join('\n')}`);
+
+    if (deletedFiles.length > 0) {
+      returnMethod.info.push(`info: totalDeletedFiles = ${deletedFiles.length}`);
+      returnMethod.info.push(`info: deletedFiles = ${deletedFiles.join('\n')}`);
     }
 
     returnMethod.dt_finish = this.getDateNow();
