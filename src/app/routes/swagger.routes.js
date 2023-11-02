@@ -5,14 +5,28 @@ import swaggerController from '../controllers/swagger.controller';
 class SwaggerRoutes {
   constructor() {
     this.router = Router();
+    this.#SwaggerJSON = swaggerController.getSwaggerJSON();
+    this.#MngSwaggerJSON = swaggerController.getMngSwaggerJSON();
     this.setupRoutes();
   }
 
+  #SwaggerJSON;
+
+  #MngSwaggerJSON;
+
   setupRoutes() {
-    this.router.get('/swagger.json', swaggerController.getSwaggerJSON);
-    this.router.get('/swagger-manager.json', swaggerController.getMngSwaggerJSON);
-    this.router.use('/swagger', swaggerUi.serve, swaggerController.setupSwaggerUI());
-    this.router.use('/swagger-manager', swaggerUi.serve, swaggerController.setupMngSwaggerUI());
+    this.router.get('/swagger.json', swaggerController.respSwaggerJSON);
+    this.router.get('/swagger-manager.json', swaggerController.respSwaggerJSON);
+    this.router.use(
+      '/swagger',
+      swaggerUi.serveFiles(this.#SwaggerJSON),
+      swaggerController.setupSwaggerUI(this.#SwaggerJSON)
+    );
+    this.router.use(
+      '/swagger-manager',
+      swaggerUi.serveFiles(this.#MngSwaggerJSON, swaggerController.getCustomOptions),
+      swaggerController.setupSwaggerUI(this.#MngSwaggerJSON, swaggerController.getCustomOptions)
+    );
   }
 
   getRoutes() {
