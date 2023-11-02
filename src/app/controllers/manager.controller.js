@@ -218,8 +218,6 @@ class ManagerController {
     const { dt_start, dt_finish, code_event, api_key } = req.query;
     const page = !req.query.page ? 1 : +req.query.page;
 
-    LogDTO.json_log_event.io_data.request_data = util.getRequestData(req);
-
     if (dt_start && dt_finish) {
       isValidQuery = true;
       const respValFindByDateTime = valFindByDateTime(dt_start, dt_finish, page);
@@ -313,6 +311,9 @@ class ManagerController {
     const responseAPI = {};
     let zipPath = null;
 
+    const respDeleteOldZip = await util.deleteOldZip();
+    LogDTO.json_log_event.methods.push(respDeleteOldZip);
+
     const respGetZipDataBase = await getZipDataBase(LogDTO.code_event);
 
     LogDTO.json_log_event.methods.push(respGetZipDataBase);
@@ -372,6 +373,9 @@ class ManagerController {
       log_event_total: undefined,
       log_error_total: undefined,
     };
+
+    const respDeleteOldZip = await util.deleteOldZip();
+    LogDTO.json_log_event.methods.push(respDeleteOldZip);
 
     const respCountProduct = await productRepository.countProduct();
     LogDTO.json_log_event.methods.push(respCountProduct);
