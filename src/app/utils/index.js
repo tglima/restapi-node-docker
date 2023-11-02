@@ -8,6 +8,10 @@ import { v4 as uuidv4 } from 'uuid';
 import logService from '../services/log.service';
 import constantUtil from './constant.util';
 
+// Feito assim por causa do import que foi adaptado
+// para evitar erro de dependências cíclicas
+const logRepository = require('../repository/log.repository');
+
 let instance;
 
 class Util {
@@ -43,6 +47,36 @@ class Util {
       methods: [],
       messages: [],
     };
+  }
+
+  getLogDTO(typeEvent, req) {
+    const { TypesEvent } = logRepository;
+
+    const io_data = {};
+    let reqData;
+
+    if (typeEvent === TypesEvent.REQUEST) {
+      if (req) {
+        reqData = this.getRequestData(req);
+      }
+
+      io_data.request_data = reqData;
+      io_data.response_data = undefined;
+    }
+
+    const LogDTO = {
+      code_event: this.getNewCodeEvent(),
+      dt_start: this.getDateNow(),
+      dt_finish: undefined,
+      type_event: typeEvent,
+      json_log_event: {
+        io_data,
+        methods: [],
+        info: [],
+      },
+    };
+
+    return LogDTO;
   }
 
   async createZip(fileData, fileNameCompress, fileNameZip) {
