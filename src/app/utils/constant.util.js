@@ -22,6 +22,7 @@ class ConstantUtil {
     this.MsgInvalidQueryParams = 'Os parametros informados não são válidos';
     this.MsgInvalidValue = 'o valor informado é inválido!';
     this.MsgErrorCreateZip = 'Ocorreu um erro na geração do arquivo zip';
+    this.MsgErrorDeleteOldZip = 'Ocorreu um erro ao tentar apagar os zips antigos';
     this.MsgErrorFindDb = 'Ocorreu um erro ao buscar o banco de dados';
     this.MsgFailGetFile = 'Falha ao obter o arquivo';
     this.MsgErrorGetInfoFile = 'Falha ao obter informações do arquivo';
