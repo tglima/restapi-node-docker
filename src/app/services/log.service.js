@@ -1,6 +1,6 @@
 import winston from 'winston';
 
-const logRepository = require('../repository/sqlite/log.repository');
+const logRepository = require('../repository/log.repository');
 
 let instance;
 

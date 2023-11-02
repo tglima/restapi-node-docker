@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { readFile } from 'fs/promises';
 import path from 'path';
-import logRepository, { TypesEvent } from '../repository/sqlite/log.repository';
+import logRepository, { TypesEvent } from '../repository/log.repository';
 import productRepository from '../repository/sqlite/product.repository';
 import logService from '../services/log.service';
 import validator from '../services/validator.services';
