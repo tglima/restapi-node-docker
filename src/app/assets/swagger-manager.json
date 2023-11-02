@@ -29,21 +29,11 @@
 				"operationId":"findLogEventByCodeEvent",
 				"security":[
 					{
-						"ApiKeyAuth":[
-
-						]
+						"ApiKeyAuth":"",
+            "Authorization":""
 					}
 				],
 				"parameters":[
-					{
-						"name":"authorization",
-						"in":"header",
-						"description":"Código de autorização para acessar o endpoint",
-						"required":true,
-						"schema":{
-							"type":"string"
-						}
-					},
 					{
 						"name":"code_event",
 						"in":"query",
@@ -70,11 +60,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"invalidRequest":{
-										"$ref":"#/components/examples/invalidRequest"
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
 									}
 								}
 							}
@@ -85,11 +75,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"notFound":{
-										"$ref":"#/components/examples/notFound"
+									"NotFoundResponse":{
+										"$ref":"#/components/examples/NotFoundResponse"
 									}
 								}
 							}
@@ -107,21 +97,11 @@
 				"operationId":"findLogEventByApiKey",
 				"security":[
 					{
-						"ApiKeyAuth":[
-
-						]
+						"ApiKeyAuth":"",
+            "Authorization":""
 					}
 				],
 				"parameters":[
-					{
-						"name":"authorization",
-						"in":"header",
-						"description":"Código de autorização para acessar o endpoint",
-						"required":true,
-						"schema":{
-							"type":"string"
-						}
-					},
 					{
 						"name":"api_key",
 						"in":"query",
@@ -137,7 +117,9 @@
 						"description":"Referente ao nº da página que deve ser procurado",
 						"required":false,
 						"schema":{
-							"type":"string"
+							"type":"integer",
+              "default": 1,
+              "format": "int32"
 						}
 					}
 				],
@@ -162,11 +144,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"invalidRequest":{
-										"$ref":"#/components/examples/invalidRequest"
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
 									}
 								}
 							}
@@ -177,11 +159,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"notFound":{
-										"$ref":"#/components/examples/notFound"
+									"NotFoundResponse":{
+										"$ref":"#/components/examples/NotFoundResponse"
 									}
 								}
 							}
@@ -196,24 +178,14 @@
 					"LogEvent"
 				],
 				"summary":"Busca um array de LogEvents através de um intervalo de datas",
-				"operationId":"findLogEventByDateRange",
+				"operationId":"FindLogEventByDateRange",
 				"security":[
 					{
-						"ApiKeyAuth":[
-
-						]
+						"ApiKeyAuth":"",
+            "Authorization":""
 					}
 				],
 				"parameters":[
-					{
-						"name":"authorization",
-						"in":"header",
-						"description":"Código de autorização para acessar o endpoint",
-						"required":true,
-						"schema":{
-							"type":"string"
-						}
-					},
 					{
 						"name":"dt_start",
 						"in":"query",
@@ -238,7 +210,9 @@
 						"description":"Referente ao nº da página que deve ser procurado",
 						"required":false,
 						"schema":{
-							"type":"string"
+							"type":"integer",
+              "default": 1,
+              "format": "int32"
 						}
 					}
 				],
@@ -263,11 +237,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"invalidRequest":{
-										"$ref":"#/components/examples/invalidRequest"
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
 									}
 								}
 							}
@@ -278,11 +252,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"notFound":{
-										"$ref":"#/components/examples/notFound"
+									"NotFoundResponse":{
+										"$ref":"#/components/examples/NotFoundResponse"
 									}
 								}
 							}
@@ -297,24 +271,14 @@
 					"Database"
 				],
 				"summary":"Retorna informações relevantes referentes ao banco de dados (Tamanho em mb, nome das tabelas, total de registros, etc)",
-				"operationId":"getDatabaseInfo",
+				"operationId":"GetDatabaseInfo",
 				"security":[
 					{
-						"ApiKeyAuth":[
-
-						]
+						"ApiKeyAuth":"",
+            "Authorization":""
 					}
 				],
 				"parameters":[
-					{
-						"name":"authorization",
-						"in":"header",
-						"description":"Código de autorização para acessar o endpoint",
-						"required":true,
-						"schema":{
-							"type":"string"
-						}
-					}
 				],
 				"responses":{
 					"200":{
@@ -337,7 +301,7 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								}
 							}
 						}
@@ -351,24 +315,14 @@
 					"Database"
 				],
 				"summary":"Retorna um zip com um backup do banco de dados",
-				"operationId":"getDatabaseBackup",
+				"operationId":"GetDatabaseBackup",
 				"security":[
 					{
-						"ApiKeyAuth":[
-
-						]
+						"ApiKeyAuth":"",
+            "Authorization":""
 					}
 				],
 				"parameters":[
-					{
-						"name":"authorization",
-						"in":"header",
-						"description":"Código de autorização para acessar o endpoint",
-						"required":true,
-						"schema":{
-							"type":"string"
-						}
-					}
 				],
 				"responses":{
 					"200":{
@@ -387,11 +341,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"invalidRequest":{
-										"$ref":"#/components/examples/invalidRequest"
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
 									}
 								}
 							}
@@ -405,25 +359,15 @@
 				"tags":[
 					"Database"
 				],
-				"summary":"Apaga {X} itens mais antigos da tabela informada",
-				"operationId":"deleteRowsTable",
+				"summary":"Apaga {{QTD_ITEMS_DELETE}} itens mais antigos da tabela informada",
+				"operationId":"DeleteRowsTable",
 				"security":[
 					{
-						"ApiKeyAuth":[
-
-						]
+						"ApiKeyAuth":"",
+            "Authorization":""
 					}
 				],
 				"parameters":[
-					{
-						"name":"authorization",
-						"in":"header",
-						"description":"Código de autorização para acessar o endpoint",
-						"required":true,
-						"schema":{
-							"type":"string"
-						}
-					},
 					{
 						"name":"table_name",
 						"in":"query",
@@ -448,7 +392,7 @@
 									"$ref":"#/components/schemas/DeleteResponse"
 								},
 								"examples":{
-									"invalidRequest":{
+									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/DeleteResponse"
 									}
 								}
@@ -460,11 +404,11 @@
 						"content":{
 							"application/json":{
 								"schema":{
-									"$ref":"#/components/schemas/DefApiResponse"
+									"$ref":"#/components/schemas/DefaultResponse"
 								},
 								"examples":{
-									"invalidRequest":{
-										"$ref":"#/components/examples/invalidRequest"
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
 									}
 								}
 							}
@@ -476,20 +420,6 @@
 	},
 	"components":{
 		"schemas":{
-			"DefApiResponse":{
-				"type":"object",
-				"properties":{
-					"code_event":{
-						"type":"string"
-					},
-					"messages":{
-						"type":"array",
-						"items":{
-							"type":"string"
-						}
-					}
-				}
-			},
 			"LogEvent":{
 				"type":"object",
 				"properties":{
@@ -512,26 +442,6 @@
 					},
 					"json_log_event":{
 						"type":"object"
-					}
-				}
-			},
-			"PageLogEvents":{
-				"type":"object",
-				"properties":{
-					"total_items":{
-						"type":"integer"
-					},
-					"total_pages":{
-						"type":"integer"
-					},
-					"current_page":{
-						"type":"integer"
-					},
-					"log_events":{
-						"type":"array",
-						"items":{
-							"$ref":"#/components/schemas/LogEvent"
-						}
 					}
 				}
 			},
@@ -580,10 +490,44 @@
 						}
 					}
 				}
+			},
+			"DefaultResponse":{
+				"type":"object",
+				"properties":{
+					"code_event":{
+						"type":"string"
+					},
+					"messages":{
+						"type":"array",
+						"items":{
+							"type":"string"
+						}
+					}
+				}
+			},
+			"PageLogEvents":{
+				"type":"object",
+				"properties":{
+					"total_items":{
+						"type":"integer"
+					},
+					"total_pages":{
+						"type":"integer"
+					},
+					"current_page":{
+						"type":"integer"
+					},
+					"log_events":{
+						"type":"array",
+						"items":{
+							"$ref":"#/components/schemas/LogEvent"
+						}
+					}
+				}
 			}
 		},
 		"examples":{
-			"authFailed":{
+			"AuthFailedResponse":{
 				"value":{
 					"code_event":"b000b00a-ab00-0000-b000-bb000b000000",
 					"messages":[
@@ -591,7 +535,7 @@
 					]
 				}
 			},
-			"invalidRequest":{
+			"InvalidRequestResponse":{
 				"value":{
 					"code_event":"b000b00a-ab00-0000-b000-bb000b000000",
 					"messages":[
@@ -599,7 +543,7 @@
 					]
 				}
 			},
-			"notFound":{
+			"NotFoundResponse":{
 				"value":{
 					"code_event":"b000b00a-ab00-0000-b000-bb000b000000",
 					"messages":[
@@ -653,7 +597,7 @@
 			"DeleteResponse":{
 				"value":{
 					"messages":[
-						"Os {{VALUE}} registros mais antigos foram excluídos com sucesso"
+						"{{MSG_DATABASE_DELETE_ROWS}}"
 					]
 				}
 			}
@@ -663,7 +607,12 @@
 				"type":"apiKey",
 				"in":"header",
 				"name":"API-KEY"
-			}
+			},
+      "Authorization":{
+        "type":"apiKey",
+        "in":"header",
+        "name": "authorization"
+      }
 		}
 	}
 }
