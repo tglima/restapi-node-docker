@@ -54,7 +54,7 @@ class ProductRepository {
       let products;
 
       if (resultDB) {
-        returnMethod.info.push(`info: qtdItems = ${resultDB.length}`);
+        returnMethod.info.push(`info: products.length = ${resultDB.length}`);
         products = {
           products: resultDB.map((product) => product.toJSON()),
         };
@@ -83,7 +83,7 @@ class ProductRepository {
     try {
       const resultDB = await this.#productDB.findByPk(id);
       const product = !resultDB ? null : resultDB.toJSON();
-      returnMethod.info.push(`info: product = ${product}`);
+      returnMethod.info.push(`info: hasProduct = ${!!resultDB}`);
       returnMethod.response = product;
     } catch (error) {
       await logService.error({ method: returnMethod.nm_method, error });
