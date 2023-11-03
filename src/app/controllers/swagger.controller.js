@@ -50,11 +50,11 @@ class SwaggerController {
   }
 
   getSwaggerJSON() {
-    return swaggerJSON;
+    return swaggerJSON();
   }
 
   getMngSwaggerJSON() {
-    return mngSwaggerJSON;
+    return mngSwaggerJSON();
   }
 
   setupSwaggerUI(jsonDocument) {
