@@ -14,7 +14,18 @@ const logRepository = require('../repository/log.repository');
 
 let instance;
 
+function createFolderTemp() {
+  const targetDirectory = path.join(__dirname, '..', 'assets', 'temp');
+  if (!existsSync(targetDirectory)) {
+    mkdir(targetDirectory);
+  }
+}
+
 class Util {
+  constructor() {
+    createFolderTemp();
+  }
+
   getDateNow() {
     const dateNow = moment().tz(constantUtil.MomentTimeZone).format(constantUtil.MomentDateFormat);
 
