@@ -9,6 +9,7 @@ const mngDBBackup = `${urlBase}/mng/database-backup/`;
 const mngDBinfo = `${urlBase}/mng/database-info/`;
 const mngDbDelete = `${urlBase}/mng/database/delete`;
 const mngLogEventsFind = `${urlBase}/mng/log-events/find/`;
+const mngLogErrosFind = `${urlBase}/mng/log-errors/find/`;
 const productFind = `${urlBase}/products/find`;
 const swaggerJSON = '/swagger.json';
 const swaggerManagerJSON = '/swagger-manager.json';
@@ -43,6 +44,7 @@ class Routes {
     router.use(mngDBBackup, utils.rateLimitAPI(1));
     router.get(mngDBBackup, managerController.getDataBaseFile);
     router.get(mngLogEventsFind, managerController.findLogEvent);
+    router.get(mngLogErrosFind, managerController.findLogError);
     router.delete(mngDbDelete, managerController.delRowsDatabase);
 
     router.get(productFind, productController.find);
