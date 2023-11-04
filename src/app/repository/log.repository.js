@@ -43,6 +43,44 @@ function formatMultiResultLogDB(resultDB, page, perPage) {
   return jsonResult;
 }
 
+function formatResultLogErrorDB(logErrorDB) {
+  logErrorDB = logErrorDB.toJSON();
+  const { json_log_error } = logErrorDB;
+  if (json_log_error) {
+    logErrorDB.json_log_error = JSON.parse(json_log_error, (key, value) => {
+      if (Array.isArray(value) && value.length === 0) {
+        return null;
+      }
+      return value;
+    });
+  }
+  return logErrorDB;
+}
+
+function formatRowsJsonLogError(rows) {
+  rows.forEach((item) => {
+    item.json_log_error = JSON.parse(item.json_log_error, (key, value) => {
+      if (Array.isArray(value) && value.length === 0) {
+        return null;
+      }
+      return value;
+    });
+  });
+
+  return rows;
+}
+
+function formatMultiResultLogErrorDB(resultDB, page, perPage) {
+  const log_errors = formatRowsJsonLogError(resultDB.rows);
+  const jsonResult = {
+    total_items: resultDB.count,
+    total_pages: Math.ceil(resultDB.count / perPage),
+    current_page: page,
+    log_errors,
+  };
+  return jsonResult;
+}
+
 class LogRepository {
   constructor() {
     this.#dbUtil = dbUtil;
@@ -248,6 +286,61 @@ class LogRepository {
     try {
       const logDB = await this.#logEventDB.findOne({ where: { code_event: codeEvent } });
       returnMethod.response = !logDB ? null : formartResultLogDB(logDB);
+    } catch (error) {
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
+
+  async findLogErrorById(id_log_error) {
+    const returnMethod = util.getReturnMethod('findLogErrorById');
+    returnMethod.info.push(`info: codeEvent = ${id_log_error}`);
+
+    try {
+      const resultDB = await this.#logErrorDB.findByPk(id_log_error);
+      returnMethod.response = !resultDB ? null : formatResultLogErrorDB(resultDB);
+      returnMethod.info.push(`info: hasLogError = ${!!resultDB}`);
+    } catch (error) {
+      await logService.error({ method: returnMethod.nm_method, error });
+      returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
+      returnMethod.info.push(`Error message: ${error.message}`);
+      returnMethod.was_error = true;
+      returnMethod.response = null;
+    }
+
+    returnMethod.dt_finish = util.getDateNow();
+    return returnMethod;
+  }
+
+  async findLogErrorByDtRange(dt_start, dt_finish, page) {
+    const returnMethod = util.getReturnMethod('findLogErrorByDtRange');
+    const offset = (page - 1) * this.#qtLimitResult;
+
+    returnMethod.info.push(`info: dt_start = ${dt_start}`);
+    returnMethod.info.push(`info: dt_finish = ${dt_finish}`);
+    returnMethod.info.push(`info: page = ${page}`);
+    returnMethod.info.push(`info: limit = ${this.#qtLimitResult}`);
+    returnMethod.info.push(`info: offset = ${offset}`);
+
+    try {
+      const resultDB = await this.#logErrorDB.findAndCountAll({
+        where: {
+          dt_register: { [Sequelize.Op.between]: [dt_start, dt_finish] },
+        },
+        offset,
+        limit: this.#qtLimitResult,
+      });
+
+      // Feito desta forma resultDB.rows[0] visto que o count falhava as vezes
+      if (resultDB.rows && resultDB.rows[0]) {
+        returnMethod.response = formatMultiResultLogErrorDB(resultDB, page, this.#qtLimitResult);
+      }
     } catch (error) {
       await logService.error({ method: returnMethod.nm_method, error });
       returnMethod.messages.push(constantUtil.MsgErroDatabaseQuery);
