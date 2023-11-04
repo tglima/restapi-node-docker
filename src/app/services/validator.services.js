@@ -38,7 +38,7 @@ class ValidatorService {
     returnMethod.info.push(`info: startDate = ${startDate} finishDate = ${finishDate}`);
 
     if (moment(startDate, this.#DateTimeFormat).isAfter(moment(finishDate, this.#DateTimeFormat))) {
-      returnMethod.message.push(constantUtil.MsgInvalidDateTimeRange);
+      returnMethod.messages.push(constantUtil.MsgInvalidDateTimeRange);
       returnMethod.response = false;
     }
 

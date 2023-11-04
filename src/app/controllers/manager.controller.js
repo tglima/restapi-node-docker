@@ -179,7 +179,7 @@ function valFindByDateTime(dt_start, dt_finish, page) {
     returnMethod.methods.push(respValDateTimeRange);
     if (!respValDateTimeRange.response) {
       isValidRangeDate = false;
-      returnMethod.messages.push(`dt_start e dt_finish: ${respValDateTimeRange.message[0]}`);
+      returnMethod.messages.push(`dt_start e dt_finish: ${respValDateTimeRange.messages[0]}`);
     }
   }
 
