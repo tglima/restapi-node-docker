@@ -14,7 +14,6 @@ class App {
     this.server = express();
     this.#port = process.env.NU_PORT;
     this.#routes = Routes;
-    this.#routes.setupRoutes(this.server);
     this.#middlewares();
   }
 
@@ -41,6 +40,11 @@ class App {
     this.server.use(express.json());
     this.server.use(helmet());
     this.server.use(authServices.checkAuth);
+
+    // As rotas devem ficar logo abaixo do authService
+    // para que as requests sejam verificadas
+    this.#routes.setupRoutes(this.server);
+
     if (process.env.MUST_RUN_MORGAN_BODY) {
       morganBody(this.server);
     }
