@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { readFile } from 'fs/promises';
 import path from 'path';
 import logRepository, { TypesEvent } from '../repository/log.repository';
@@ -195,6 +194,62 @@ function valFindByDateTime(dt_start, dt_finish, page) {
   return returnMethod;
 }
 
+function valFindDtRange(dt_start, dt_finish, page) {
+  const returnMethod = util.getReturnMethod('valFindDtRange');
+
+  let isValidNuPage = true;
+  let isValidDtStart = true;
+  let isValidDtFinish = true;
+  let isValidRangeDate = true;
+
+  returnMethod.info.push(`info: dt_start = ${dt_start}`);
+  returnMethod.info.push(`info: dt_finish = ${dt_finish}`);
+  returnMethod.info.push(`info: page = ${page}`);
+  returnMethod.response = false;
+
+  const respValPage = validator.validatePage(page);
+  returnMethod.methods.push(respValPage);
+
+  if (!respValPage.response) {
+    isValidNuPage = false;
+    returnMethod.messages.push(`${respValPage.messages}`);
+  }
+
+  const respValDtStart = validator.validateDateTime(dt_start);
+  returnMethod.methods.push(respValDtStart);
+
+  if (!respValDtStart.response) {
+    isValidDtStart = false;
+    returnMethod.messages.push(`dt_start: ${respValDtStart.messages[0]}`);
+  }
+
+  const respValDtFinish = validator.validateDateTime(dt_finish);
+  returnMethod.methods.push(respValDtFinish);
+
+  if (!respValDtFinish.response) {
+    isValidDtFinish = false;
+    returnMethod.messages.push(`dt_finish: ${respValDtFinish.messages[0]}`);
+  }
+
+  if (isValidDtStart && isValidDtFinish) {
+    const respValDateTimeRange = validator.valDateTimeRange(dt_start, dt_finish);
+    returnMethod.methods.push(respValDateTimeRange);
+    if (!respValDateTimeRange.response) {
+      isValidRangeDate = false;
+      returnMethod.messages.push(`dt_start e dt_finish: ${respValDateTimeRange.messages[0]}`);
+    }
+  }
+
+  returnMethod.response = isValidNuPage && isValidDtStart && isValidDtFinish && isValidRangeDate;
+
+  if (!returnMethod.response) {
+    logService.info(JSON.stringify(returnMethod));
+  }
+
+  returnMethod.dt_finish = util.getDateNow();
+  return returnMethod;
+}
+
 class ManagerController {
   async findLogEvent(req, res) {
     const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
@@ -271,6 +326,79 @@ class ManagerController {
 
     if (!responseAPI.status) {
       const respGetResponseAPIRespFind = getResponseAPIRespFind(respFindDB, LogDTO.code_event);
+      responseAPI = respGetResponseAPIRespFind.response;
+    }
+
+    LogDTO.json_log_event.io_data.response_data = responseAPI;
+
+    await logRepository.saveLogEvent(LogDTO);
+    return res.status(responseAPI.status).json(responseAPI.body);
+  }
+
+  async findLogError(req, res) {
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
+    let responseAPI = {};
+    let respFindDB;
+    let queryIdentified = false;
+    const messages = [];
+    const { dt_start, dt_finish, id_log_error } = req.query;
+    const page = !req.query.page ? 1 : +req.query.page;
+    //
+
+    LogDTO.json_log_event.info.push(`info: dt_start = ${dt_start}`);
+    LogDTO.json_log_event.info.push(`info: dt_finish = ${dt_finish}`);
+    LogDTO.json_log_event.info.push(`info: page = ${page}`);
+    LogDTO.json_log_event.info.push(`info: id_log_error = ${id_log_error}`);
+
+    if (dt_start && dt_finish) {
+      queryIdentified = true;
+      const respValFindDtRange = valFindDtRange(dt_start, dt_finish, page);
+
+      LogDTO.json_log_event.methods.push(respValFindDtRange);
+
+      if (!respValFindDtRange.response) {
+        respValFindDtRange.messages.forEach((message) => {
+          messages.push(message);
+        });
+        responseAPI.status = 400;
+        responseAPI.body = { code_event: LogDTO.code_event, messages };
+      } else {
+        respFindDB = await logRepository.findLogErrorByDtRange(dt_start, dt_finish, page);
+      }
+    }
+
+    if (!queryIdentified && id_log_error) {
+      queryIdentified = true;
+
+      // Utiliza o mesmo validatePage
+      const respValPage = validator.validatePage(+id_log_error);
+      LogDTO.json_log_event.methods.push(respValPage);
+
+      if (!respValPage.response) {
+        respValPage.messages.forEach((message) => {
+          message = message.replace('page', 'id_log_error');
+          messages.push(message);
+        });
+        responseAPI.status = 400;
+        responseAPI.body = { code_event: LogDTO.code_event, messages };
+      } else {
+        respFindDB = await logRepository.findLogErrorById(id_log_error);
+      }
+    }
+
+    // Se chegou até aqui e a busca ainda não foi identificada,
+    // a requisição foi feita errada.
+    if (!queryIdentified) {
+      responseAPI.status = 400;
+      messages.push(constant.MsgInvalidQueryParams);
+      responseAPI.body = { code_event: LogDTO.code_event, messages };
+    }
+
+    // Se chegou até aqui significa que não foi encontrado problemas na requisição
+    // Verificaremos a seguir a propriedade respFindDB
+    if (!responseAPI.status) {
+      const respGetResponseAPIRespFind = getResponseAPIRespFind(respFindDB, LogDTO.code_event);
+      LogDTO.json_log_event.methods.push(respGetResponseAPIRespFind);
       responseAPI = respGetResponseAPIRespFind.response;
     }
 
