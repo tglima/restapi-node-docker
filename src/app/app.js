@@ -39,8 +39,9 @@ class App {
   #middlewares() {
     this.server.use(express.json());
     this.server.use(helmet());
-    this.server.use(authServices.checkAuth);
+    this.server.set(constantUtil.TrustProxy, process.env.EXPRESS_TRUST_PROXY_VALUE);
 
+    this.server.use(authServices.checkAuth);
     // As rotas devem ficar logo abaixo do authService
     // para que as requests sejam verificadas
     this.#routes.setupRoutes(this.server);
