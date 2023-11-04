@@ -3,7 +3,7 @@ let instance;
 class ConstantUtil {
   constructor() {
     process.env.SWAGGER_URL = process.env.SWAGGER_URL.replace('{{NU_PORT}}', process.env.NU_PORT);
-
+    this.TrustProxy = 'trust proxy';
     this.MsgStatus400 =
       'Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!';
     this.MsgStatus401 = 'Credenciais inválidas ou ausentes';
