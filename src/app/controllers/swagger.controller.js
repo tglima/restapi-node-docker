@@ -6,10 +6,11 @@ const swaggerManagerJson = require('../assets/swagger-manager.json');
 
 const nuVersion = process.env.NU_VERSION || 1;
 const customCss = process.env.SWAGGER_CUSTOM_CSS || constantUtil.DefSwaggerCustomCSS;
+const customSiteTitle = process.env.SWAGGER_CUSTOM_SITE_TITLE || constantUtil.DefSwaggerCustomSiteTitle;
 
 const customOptions = {
   customCss,
-  customSiteTitle: process.env.SWAGGER_CUSTOM_SITE_TITLE,
+  customSiteTitle,
 };
 
 function swaggerJSON() {
