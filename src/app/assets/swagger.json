@@ -29,7 +29,9 @@
 				"operationId":"FindAllProducts",
 				"security":[
 					{
-						"ApiKeyAuth":""
+						"API_KEY":[
+
+						]
 					}
 				],
 				"responses":{
@@ -49,7 +51,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -58,6 +60,21 @@
 								"examples":{
 									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
 									}
 								}
 							}
@@ -75,7 +92,9 @@
 				"operationId":"FindProductById",
 				"security":[
 					{
-						"ApiKeyAuth":""
+						"API_KEY":[
+
+						]
 					}
 				],
 				"parameters":[
@@ -107,7 +126,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -116,6 +135,21 @@
 								"examples":{
 									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
 									}
 								}
 							}
@@ -251,10 +285,11 @@
 			}
 		},
 		"securitySchemes":{
-			"ApiKeyAuth":{
+			"API_KEY":{
 				"type":"apiKey",
 				"in":"header",
-				"name":"API-KEY"
+				"name":"API-KEY",
+				"description":"Chave de acesso individual disponibilizado para acessar a API"
 			}
 		}
 	}
