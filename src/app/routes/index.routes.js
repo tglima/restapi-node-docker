@@ -3,6 +3,7 @@ import managerController from '../controllers/manager.controller';
 import productController from '../controllers/product.controller';
 import swaggerController from '../controllers/swagger.controller';
 import utils from '../utils';
+import constantUtil from '../utils/constant.util';
 
 const urlBase = `/v${process.env.NU_VERSION}`;
 const mngDBBackup = `${urlBase}/mng/database-backup/`;
@@ -61,6 +62,10 @@ class Routes {
       swaggerUi.serveFiles(this.#MngSwaggerJSON, swaggerController.getCustomOptions),
       swaggerController.setupSwaggerUI(this.#MngSwaggerJSON, swaggerController.getCustomOptions)
     );
+
+    router.use((req, res, next) => {
+      res.status(404).send(constantUtil.MsgStatus404);
+    });
   }
 }
 
