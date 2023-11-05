@@ -29,8 +29,12 @@
 				"operationId":"findLogEventByCodeEvent",
 				"security":[
 					{
-						"ApiKeyAuth":"",
-            "Authorization":""
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
 					}
 				],
 				"parameters":[
@@ -56,7 +60,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -65,6 +69,21 @@
 								"examples":{
 									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
 									}
 								}
 							}
@@ -97,8 +116,12 @@
 				"operationId":"findLogEventByApiKey",
 				"security":[
 					{
-						"ApiKeyAuth":"",
-            "Authorization":""
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
 					}
 				],
 				"parameters":[
@@ -118,8 +141,8 @@
 						"required":false,
 						"schema":{
 							"type":"integer",
-              "default": 1,
-              "format": "int32"
+							"default":1,
+							"format":"int32"
 						}
 					}
 				],
@@ -140,7 +163,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -149,6 +172,21 @@
 								"examples":{
 									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
 									}
 								}
 							}
@@ -181,8 +219,12 @@
 				"operationId":"FindLogEventByDateRange",
 				"security":[
 					{
-						"ApiKeyAuth":"",
-            "Authorization":""
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
 					}
 				],
 				"parameters":[
@@ -211,8 +253,8 @@
 						"required":false,
 						"schema":{
 							"type":"integer",
-              "default": 1,
-              "format": "int32"
+							"default":1,
+							"format":"int32"
 						}
 					}
 				],
@@ -233,7 +275,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -247,8 +289,223 @@
 							}
 						}
 					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
+									}
+								}
+							}
+						}
+					},
 					"404":{
 						"description":"LogEvent não encontrado",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"NotFoundResponse":{
+										"$ref":"#/components/examples/NotFoundResponse"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/log-errors/find?id_log_error={id_log_error}":{
+			"get":{
+				"tags":[
+					"LogError"
+				],
+				"summary":"Retorna LogError através do id informado",
+				"operationId":"findLogErrorById",
+				"security":[
+					{
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
+					}
+				],
+				"parameters":[
+					{
+						"name":"id_log_error",
+						"in":"query",
+						"description":"Id único de cada LogError",
+						"required":true,
+						"schema":{
+							"type":"integer",
+							"format":"int32"
+						}
+					}
+				],
+				"responses":{
+					"200":{
+						"description":"LogError encontrado",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/LogError"
+								}
+							}
+						}
+					},
+					"400":{
+						"description":"Falha na requisição",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
+									}
+								}
+							}
+						}
+					},
+					"404":{
+						"description":"LogError não encontrado",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"NotFoundResponse":{
+										"$ref":"#/components/examples/NotFoundResponse"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/log-errors/find?dt_start={dt_start}&dt_finish={dt_finish}&page={page}":{
+			"get":{
+				"tags":[
+					"LogError"
+				],
+				"summary":"Busca um array de LogError através de um intervalo de datas",
+				"operationId":"FindLogErrorByDateRange",
+				"security":[
+					{
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
+					}
+				],
+				"parameters":[
+					{
+						"name":"dt_start",
+						"in":"query",
+						"description":"Data de inicio da pesquisa, utilize o formato YYYY-MM-DD HH:mm:ss",
+						"required":true,
+						"schema":{
+							"type":"string"
+						}
+					},
+					{
+						"name":"dt_finish",
+						"in":"query",
+						"description":"Data fim da pesquisa, utilize o formato YYYY-MM-DD HH:mm:ss",
+						"required":true,
+						"schema":{
+							"type":"string"
+						}
+					},
+					{
+						"name":"page",
+						"in":"query",
+						"description":"Referente ao nº da página que deve ser procurado",
+						"required":false,
+						"schema":{
+							"type":"integer",
+							"default":1,
+							"format":"int32"
+						}
+					}
+				],
+				"responses":{
+					"200":{
+						"description":"LogErrors encontrados",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/PageLogErrors"
+								},
+								"examples":{
+									"PageLogEvents":{
+										"$ref":"#/components/examples/PageLogErrors"
+									}
+								}
+							}
+						}
+					},
+					"400":{
+						"description":"Falha na requisição",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
+									}
+								}
+							}
+						}
+					},
+					"404":{
+						"description":"LogError não encontrado",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -274,11 +531,16 @@
 				"operationId":"GetDatabaseInfo",
 				"security":[
 					{
-						"ApiKeyAuth":"",
-            "Authorization":""
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
 					}
 				],
 				"parameters":[
+
 				],
 				"responses":{
 					"200":{
@@ -297,11 +559,26 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
 									"$ref":"#/components/schemas/DefaultResponse"
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
+									}
 								}
 							}
 						}
@@ -318,11 +595,16 @@
 				"operationId":"GetDatabaseBackup",
 				"security":[
 					{
-						"ApiKeyAuth":"",
-            "Authorization":""
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
 					}
 				],
 				"parameters":[
+
 				],
 				"responses":{
 					"200":{
@@ -337,7 +619,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -346,6 +628,21 @@
 								"examples":{
 									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
 									}
 								}
 							}
@@ -363,8 +660,12 @@
 				"operationId":"DeleteRowsTable",
 				"security":[
 					{
-						"ApiKeyAuth":"",
-            "Authorization":""
+						"API_KEY":[
+
+						],
+						"AUTHORIZATION":[
+
+						]
 					}
 				],
 				"parameters":[
@@ -400,7 +701,7 @@
 						}
 					},
 					"400":{
-						"description":"Ocorreu uma falha/erro na sua requisição. Reveja os dados enviados e tente novamente!",
+						"description":"Falha na requisição",
 						"content":{
 							"application/json":{
 								"schema":{
@@ -409,6 +710,21 @@
 								"examples":{
 									"InvalidRequestResponse":{
 										"$ref":"#/components/examples/InvalidRequestResponse"
+									}
+								}
+							}
+						}
+					},
+					"401":{
+						"description":"Falha na autenticação",
+						"content":{
+							"application/json":{
+								"schema":{
+									"$ref":"#/components/schemas/DefaultResponse"
+								},
+								"examples":{
+									"InvalidRequestResponse":{
+										"$ref":"#/components/examples/AuthFailedResponse"
 									}
 								}
 							}
@@ -441,6 +757,24 @@
 						"type":"string"
 					},
 					"json_log_event":{
+						"type":"object"
+					}
+				}
+			},
+			"LogError":{
+				"type":"object",
+				"properties":{
+					"id_log_error":{
+						"type":"integer"
+					},
+					"dt_register":{
+						"type":"string",
+						"format":"date-time"
+					},
+					"method":{
+						"type":"string"
+					},
+					"json_log_error":{
 						"type":"object"
 					}
 				}
@@ -524,6 +858,26 @@
 						}
 					}
 				}
+			},
+			"PageLogErrors":{
+				"type":"object",
+				"properties":{
+					"total_items":{
+						"type":"integer"
+					},
+					"total_pages":{
+						"type":"integer"
+					},
+					"current_page":{
+						"type":"integer"
+					},
+					"log_errors":{
+						"type":"array",
+						"items":{
+							"$ref":"#/components/schemas/LogError"
+						}
+					}
+				}
 			}
 		},
 		"examples":{
@@ -594,6 +948,33 @@
 					]
 				}
 			},
+			"PageLogErrors":{
+				"value":{
+					"total_items":2,
+					"total_pages":1,
+					"current_page":1,
+					"log_errors":[
+						{
+							"id_log_error":1,
+							"code_event":"b000b00a-ab00-0000-b000-bb000b000000",
+							"dt_register":"2023-11-01 00:00:00",
+							"method":"exceptionHandler",
+							"json_log_error":{
+								"json_dynamic":"Dinâmico"
+							}
+						},
+						{
+							"id_log_error":2,
+							"code_event":"b000b00a-ab00-0000-b000-bb000b000000",
+							"dt_register":"2023-11-01 00:01:00",
+							"method":"exceptionHandler",
+							"json_log_error":{
+								"json_dynamic":"Dinâmico"
+							}
+						}
+					]
+				}
+			},
 			"DeleteResponse":{
 				"value":{
 					"messages":[
@@ -603,16 +984,18 @@
 			}
 		},
 		"securitySchemes":{
-			"ApiKeyAuth":{
+			"API_KEY":{
 				"type":"apiKey",
 				"in":"header",
-				"name":"API-KEY"
+				"name":"API-KEY",
+				"description":"Chave de acesso individual disponibilizado para acessar a API"
 			},
-      "Authorization":{
-        "type":"apiKey",
-        "in":"header",
-        "name": "authorization"
-      }
+			"AUTHORIZATION":{
+				"type":"apiKey",
+				"in":"header",
+				"name":"authorization",
+				"description":"Chave de acesso disponibilizada apenas para admnistradores da API"
+			}
 		}
 	}
 }
