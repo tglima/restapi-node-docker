@@ -8,7 +8,7 @@
     "dev": "nodemon --exec npx babel-node ./app/main.js",
     "prebuild": "rimraf ../dist",
     "build": "babel ./app -d ../dist",
-    "postbuild": "node -e \"const fs = require('fs-extra'); fs.copySync('package.json', '../dist/package.json'); fs.copySync('./app/assets', '../dist/assets/');\"",
+    "postbuild": "node -e \"const fs = require('fs-extra'); fs.copySync('./app/config', '../dist/config'); fs.copySync('./app/assets', '../dist/assets/'); fs.copySync('package.json', '../dist/package.json');  fs.copySync('Dockerfile', '../dist/Dockerfile');\"",
     "start": "node main.js"
   },
   "repository": {
