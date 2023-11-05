@@ -1,7 +1,7 @@
 {
   "name": "restapi-node-docker",
-  "version": "0.0.3",
-  "description": "API Rest desenvolvida com NodeJS e PostgreSQL para rodar dentro de um container docker",
+  "version": "0.0.4",
+  "description": "API Rest desenvolvida com NodeJS e SQLite para rodar dentro de um container docker",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
