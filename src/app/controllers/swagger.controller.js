@@ -5,9 +5,10 @@ const swaggerJson = require('../assets/swagger.json');
 const swaggerManagerJson = require('../assets/swagger-manager.json');
 
 const nuVersion = process.env.NU_VERSION || 1;
+const customCss = process.env.SWAGGER_CUSTOM_CSS || constantUtil.DefSwaggerCustomCSS;
 
 const customOptions = {
-  customCss: process.env.SWAGGER_CUSTOM_CSS,
+  customCss,
   customSiteTitle: process.env.SWAGGER_CUSTOM_SITE_TITLE,
 };
 
