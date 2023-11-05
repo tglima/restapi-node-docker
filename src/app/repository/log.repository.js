@@ -86,8 +86,6 @@ class LogRepository {
     this.#dbUtil = dbUtil;
     this.#defineLogEvent();
     this.#defineLogError();
-    this.#qtLimitResult = +process.env.QT_LIMIT_RESULT || 10;
-    this.#qtLimitDelete = +process.env.QT_LIMIT_DELETE || 10;
   }
 
   #dbUtil;
@@ -95,10 +93,6 @@ class LogRepository {
   #logEventDB;
 
   #logErrorDB;
-
-  #qtLimitResult;
-
-  #qtLimitDelete;
 
   #defineLogEvent() {
     this.#logEventDB = this.#dbUtil.SQLite.define(
@@ -205,12 +199,12 @@ class LogRepository {
   async findByDateRange(dt_start, dt_finish, page) {
     const returnMethod = util.getReturnMethod('findByDateRange');
 
-    const offset = (page - 1) * this.#qtLimitResult;
+    const offset = (page - 1) * constantUtil.QtLimitResult;
 
     returnMethod.info.push(`info: dt_start = ${dt_start}`);
     returnMethod.info.push(`info: dt_finish = ${dt_finish}`);
     returnMethod.info.push(`info: page = ${page}`);
-    returnMethod.info.push(`info: limit = ${this.#qtLimitResult}`);
+    returnMethod.info.push(`info: limit = ${constantUtil.QtLimitResult}`);
     returnMethod.info.push(`info: offset = ${offset}`);
 
     try {
@@ -220,12 +214,12 @@ class LogRepository {
           dt_finish: { [Sequelize.Op.lte]: dt_finish },
         },
         offset,
-        limit: this.#qtLimitResult,
+        limit: constantUtil.QtLimitResult,
       });
 
       // Feito desta forma resultDB.rows[0] visto que o count falhava as vezes
       if (resultDB.rows && resultDB.rows[0]) {
-        returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
+        returnMethod.response = formatMultiResultLogDB(resultDB, page, constantUtil.QtLimitResult);
       }
     } catch (error) {
       await logService.error({ method: returnMethod.nm_method, error });
@@ -242,13 +236,13 @@ class LogRepository {
   async findByApiKey(api_key, page) {
     const returnMethod = util.getReturnMethod('findByApiKey');
 
-    const offset = (page - 1) * this.#qtLimitResult;
+    const offset = (page - 1) * constantUtil.QtLimitResult;
 
     const literalSubQuery = constantUtil.SQliteQueryFindByApiKey.replace('{{VALUE}}', api_key);
 
     returnMethod.info.push(`info: api_key = ${api_key}`);
     returnMethod.info.push(`info: page = ${page}`);
-    returnMethod.info.push(`info: limit = ${this.#qtLimitResult}`);
+    returnMethod.info.push(`info: limit = ${constantUtil.QtLimitResult}`);
     returnMethod.info.push(`info: offset = ${offset}`);
     returnMethod.info.push(`info: literalSubQuery = ${literalSubQuery}`);
 
@@ -259,12 +253,12 @@ class LogRepository {
         },
         order: [['dt_start', 'DESC']],
         offset,
-        limit: this.#qtLimitResult,
+        limit: constantUtil.QtLimitResult,
       });
 
       // Feito desta forma resultDB.rows[0] visto que o count falhava as vezes
       if (resultDB.rows && resultDB.rows[0]) {
-        returnMethod.response = formatMultiResultLogDB(resultDB, page, this.#qtLimitResult);
+        returnMethod.response = formatMultiResultLogDB(resultDB, page, constantUtil.QtLimitResult);
       }
     } catch (error) {
       await logService.error({ method: returnMethod.nm_method, error });
@@ -320,12 +314,12 @@ class LogRepository {
 
   async findLogErrorByDtRange(dt_start, dt_finish, page) {
     const returnMethod = util.getReturnMethod('findLogErrorByDtRange');
-    const offset = (page - 1) * this.#qtLimitResult;
+    const offset = (page - 1) * constantUtil.QtLimitResult;
 
     returnMethod.info.push(`info: dt_start = ${dt_start}`);
     returnMethod.info.push(`info: dt_finish = ${dt_finish}`);
     returnMethod.info.push(`info: page = ${page}`);
-    returnMethod.info.push(`info: limit = ${this.#qtLimitResult}`);
+    returnMethod.info.push(`info: limit = ${constantUtil.QtLimitResult}`);
     returnMethod.info.push(`info: offset = ${offset}`);
 
     try {
@@ -334,12 +328,12 @@ class LogRepository {
           dt_register: { [Sequelize.Op.between]: [dt_start, dt_finish] },
         },
         offset,
-        limit: this.#qtLimitResult,
+        limit: constantUtil.QtLimitResult,
       });
 
       // Feito desta forma resultDB.rows[0] visto que o count falhava as vezes
       if (resultDB.rows && resultDB.rows[0]) {
-        returnMethod.response = formatMultiResultLogErrorDB(resultDB, page, this.#qtLimitResult);
+        returnMethod.response = formatMultiResultLogErrorDB(resultDB, page, constantUtil.QtLimitResult);
       }
     } catch (error) {
       await logService.error({ method: returnMethod.nm_method, error });
@@ -397,7 +391,7 @@ class LogRepository {
     try {
       const rowsToDelete = await this.#logErrorDB.findAll({
         order: [['dt_register', 'ASC']],
-        limit: this.#qtLimitDelete,
+        limit: constantUtil.QtLimitDelete,
       });
 
       returnMethod.info.push(`info: rowsToDelete.length = ${rowsToDelete.length}`);
@@ -440,7 +434,7 @@ class LogRepository {
     try {
       const rowsToDelete = await this.#logEventDB.findAll({
         order: [['dt_start', 'ASC']],
-        limit: this.#qtLimitDelete,
+        limit: constantUtil.QtLimitDelete,
       });
 
       // Feito assim, pois sempre teremos pelo menos 1 registro na tabela.
