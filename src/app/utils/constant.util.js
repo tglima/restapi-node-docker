@@ -33,6 +33,7 @@ class ConstantUtil {
     this.ApiKeyFormatRegex = /^(?=[a-zA-Z\d-]{15,}$)(?!.*([a-zA-Z\d-])\1{2,})(?!.*\s)/;
     this.SQliteQueryFindByApiKey = `json_extract(json_log_event, '$.io_data.request_data.headers."api-key"') = '{{VALUE}}'`;
     this.DefSwaggerCustomCSS = '.swagger-ui .response-col_links { display: none; }';
+    this.DefSwaggerCustomSiteTitle = 'TgLima Tech - Node Rest API';
   }
 
   static getInstance() {
