@@ -92,8 +92,7 @@ class Util {
 
   async createZip(fileData, fileNameCompress, fileNameZip) {
     const returnMethod = this.getReturnMethod('createZip');
-
-    const levelCompress = +process.env.LEVEL_COMPRESS_FILE || 5;
+    const levelCompress = constantUtil.LevelCompress;
 
     returnMethod.info.push(`info: levelCompress = ${levelCompress}`);
     returnMethod.info.push(`info: fileNameCompress = ${fileNameCompress}`);
@@ -146,7 +145,7 @@ class Util {
   async deleteOldZip() {
     const folderPath = path.join(__dirname, '..', 'assets', 'temp');
     const files = readdirSync(folderPath);
-    const maxAllowedMsServer = (+process.env.MAX_ALLOWED_MIN_SERVER || 5) * 60 * 1000;
+    const maxAllowedMsServer = constantUtil.MaxAllowedMinServer * 60 * 1000;
     const returnMethod = this.getReturnMethod('deleteOldZip');
     const deletedFiles = [];
     const serverFiles = [];
@@ -189,9 +188,7 @@ class Util {
   }
 
   rateLimitAPI(qtMaxRate) {
-    const qtMaxRateDef = process.env.QT_MAX_RATE_MINUTE || 300;
-
-    qtMaxRate = !qtMaxRate ? qtMaxRateDef : +qtMaxRate;
+    qtMaxRate = !qtMaxRate ? constantUtil.QtMaxRateMin : +qtMaxRate;
 
     return rateLimit({
       windowMs: 1 * 60 * 1000, // 1 Minute

@@ -10,8 +10,7 @@ let instance;
 
 class DbUtil {
   constructor() {
-    this.DataBaseFileName = process.env.DATABASE_FILE_NAME || 'database.db';
-    this.#dbPathSQLite = path.join(__dirname, '..', 'assets', this.DataBaseFileName);
+    this.#dbPathSQLite = path.join(__dirname, '..', 'assets', constantUtil.DataBaseFileName);
 
     this.SQLite = new Sequelize({
       dialect: 'sqlite',

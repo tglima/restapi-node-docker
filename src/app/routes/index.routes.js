@@ -5,7 +5,7 @@ import swaggerController from '../controllers/swagger.controller';
 import utils from '../utils';
 import constantUtil from '../utils/constant.util';
 
-const urlBase = `/v${process.env.NU_VERSION}`;
+const urlBase = `/v${constantUtil.NuVersionAPI}`;
 const mngDBBackup = `${urlBase}/mng/database-backup/`;
 const mngDBinfo = `${urlBase}/mng/database-info/`;
 const mngDbDelete = `${urlBase}/mng/database/delete`;

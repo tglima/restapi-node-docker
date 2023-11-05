@@ -103,14 +103,14 @@ class ValidatorService {
 
     const publicRoutes = ['/swagger', '/health-check/', '/favicon'];
     const mngRoutes = ['/mng/'];
-    const validKeys = process.env.API_KEY.split(';');
-    const validMngAuth = process.env.MNG_AUTHENTICATION.split(';');
+    const validKeys = constantUtil.ApiKey.split(';');
+    const validMngAuth = constantUtil.MngKeyAuth.split(';');
 
     returnMethod.info.push(`info: req.originalUrl = ${req.originalUrl}`);
 
     let urlBase = req.originalUrl;
 
-    urlBase = urlBase.replace(`/api/v${process.env.NU_VERSION}`, '');
+    urlBase = urlBase.replace(`/api/v${constantUtil.NuVersionAPI}`, '');
     returnMethod.info.push(`info: urlBase = ${urlBase}`);
 
     if (urlBase === '/' || publicRoutes.some((route) => urlBase.includes(route))) {

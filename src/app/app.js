@@ -12,7 +12,7 @@ import dbUtil from './utils/db.util';
 class App {
   constructor() {
     this.server = express();
-    this.#port = process.env.NU_PORT;
+    this.#port = constantUtil.NuPort;
     this.#routes = Routes;
     this.#middlewares();
   }
@@ -39,14 +39,14 @@ class App {
   #middlewares() {
     this.server.use(express.json());
     this.server.use(helmet());
-    this.server.set(constantUtil.TrustProxy, process.env.EXPRESS_TRUST_PROXY_VALUE);
+    this.server.set(constantUtil.TrustProxy, constantUtil.ExpressTrustProxyValue);
 
     this.server.use(authServices.checkAuth);
     // As rotas devem ficar logo abaixo do authService
     // para que as requests sejam verificadas
     this.#routes.setupRoutes(this.server);
 
-    if (process.env.MUST_RUN_MORGAN_BODY) {
+    if (constantUtil.MustRunMorganBody) {
       morganBody(this.server);
     }
     this.#exceptionHandler();

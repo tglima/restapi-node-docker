@@ -4,37 +4,32 @@ import constantUtil from '../utils/constant.util';
 const swaggerJson = require('../assets/swagger.json');
 const swaggerManagerJson = require('../assets/swagger-manager.json');
 
-const nuVersion = process.env.NU_VERSION || 1;
-const customCss = process.env.SWAGGER_CUSTOM_CSS || constantUtil.DefSwaggerCustomCSS;
-const customSiteTitle = process.env.SWAGGER_CUSTOM_SITE_TITLE || constantUtil.DefSwaggerCustomSiteTitle;
-
 const customOptions = {
-  customCss,
-  customSiteTitle,
+  customCss: constantUtil.SwaggerCustomCSS,
+  customSiteTitle: constantUtil.CustomSiteTitle,
 };
 
 function swaggerJSON() {
   let document = swaggerJson;
   document = JSON.stringify(document);
-  document = document.replace('{{NU_VERSION}}', nuVersion);
-  document = document.replace('{{SWAGGER_INFO_VERSION}}', process.env.SWAGGER_INFO_VERSION);
-  document = document.replace('{{SWAGGER_INFO_DESCRIPTION}}', process.env.SWAGGER_INFO_DESCRIPTION);
-  document = document.replace('{{SWAGGER_SERVERS_DESCRIPTION}}', process.env.SWAGGER_SERVERS_DESCRIPTION);
+  document = document.replace('{{NU_VERSION}}', constantUtil.NuVersionAPI);
+  document = document.replace('{{SWAGGER_INFO_VERSION}}', constantUtil.SwaggerInfoVersion);
+  document = document.replace('{{SWAGGER_INFO_DESCRIPTION}}', constantUtil.SwaggerInfoDesc);
+  document = document.replace('{{SWAGGER_SERVERS_DESCRIPTION}}', constantUtil.SwaggerServersDescription);
 
   return JSON.parse(document);
 }
 
 function mngSwaggerJSON() {
-  const QtLimitDelete = process.env.QT_LIMIT_DELETE || '10';
-  const MsgDatabaseDeleteRows = constantUtil.MsgDatabaseDeleteRows.replace('{{VALUE}}', QtLimitDelete);
+  const MsgDBDeleteRows = constantUtil.MsgDatabaseDeleteRows.replace('{{VALUE}}', constantUtil.QtLimitDelete);
 
   let document = swaggerManagerJson;
   document = JSON.stringify(document);
-  document = document.replace('{{NU_VERSION}}', nuVersion);
-  document = document.replace('{{QTD_ITEMS_DELETE}}', QtLimitDelete);
-  document = document.replace('{{MSG_DATABASE_DELETE_ROWS}}', MsgDatabaseDeleteRows);
-  document = document.replace('{{SWAGGER_SERVERS_DESCRIPTION}}', process.env.SWAGGER_SERVERS_DESCRIPTION);
-  document = document.replace('{{SWAGGER_INFO_DESCRIPTION_MNG}}', process.env.SWAGGER_INFO_DESCRIPTION_MNG);
+  document = document.replace('{{NU_VERSION}}', constantUtil.NuVersionAPI);
+  document = document.replace('{{MSG_DATABASE_DELETE_ROWS}}', MsgDBDeleteRows);
+  document = document.replace('{{QTD_ITEMS_DELETE}}', constantUtil.QtLimitDelete);
+  document = document.replace('{{SWAGGER_INFO_DESCRIPTION_MNG}}', constantUtil.SwaggerInfoDescMng);
+  document = document.replace('{{SWAGGER_SERVERS_DESCRIPTION}}', constantUtil.SwaggerServersDescription);
 
   return JSON.parse(document);
 }
