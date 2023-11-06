@@ -5,22 +5,22 @@ import productRepository from '../repository/product.repository';
 import logService from '../services/log.service';
 import validator from '../services/validator.services';
 import util from '../utils';
-import constant from '../utils/constant.util';
+import constantUtil from '../utils/constant.util';
 import dbUtil from '../utils/db.util';
 
 async function getZipDataBase(codeEvent) {
   const returnMethod = util.getReturnMethod('getZipDataBase');
 
-  returnMethod.info.push(`info: database = ${constant.DataBaseFileName}`);
+  returnMethod.info.push(`info: database = ${constantUtil.DataBaseFileName}`);
   let filePath;
   let fileData;
 
   try {
-    filePath = path.join(__dirname, '..', 'assets', constant.DataBaseFileName);
+    filePath = path.join(__dirname, '..', 'assets', constantUtil.DataBaseFileName);
     fileData = await readFile(filePath);
   } catch (error) {
     await logService.error({ method: returnMethod.nm_method, error });
-    returnMethod.messages.push(constant.MsgErrorFindDb);
+    returnMethod.messages.push(constantUtil.MsgErrorFindDb);
     returnMethod.info.push(`Error message: ${error.message}`);
     returnMethod.was_error = true;
     returnMethod.response = null;
@@ -29,7 +29,7 @@ async function getZipDataBase(codeEvent) {
   returnMethod.info.push(`info: filePath = ${filePath}`);
 
   if (fileData) {
-    const respCreateZip = await util.createZip(fileData, constant.DataBaseFileName, `${codeEvent}.zip`);
+    const respCreateZip = await util.createZip(fileData, constantUtil.DataBaseFileName, `${codeEvent}.zip`);
 
     if (respCreateZip.was_error || !respCreateZip.response) {
       respCreateZip.messages.forEach((message) => {
@@ -44,7 +44,7 @@ async function getZipDataBase(codeEvent) {
     }
   } else {
     returnMethod.info.push(`info: fileData is null`);
-    returnMethod.messages.push(constant.MsgFailGetFile);
+    returnMethod.messages.push(constantUtil.MsgFailGetFile);
   }
 
   if (!returnMethod.response) {
@@ -65,14 +65,14 @@ function getResponseAPIRespFind(respFind, code_event) {
   if (respFind.error) {
     responseAPI = {
       status: 500,
-      body: { code_event, messages: [constant.MsgStatus500] },
+      body: { code_event, messages: [constantUtil.MsgStatus500] },
     };
   }
 
   if (!respFind.error && !respFind.response) {
     responseAPI = {
       status: 404,
-      body: { code_event, messages: [constant.MsgStatus404] },
+      body: { code_event, messages: [constantUtil.MsgStatus404] },
     };
   }
 
@@ -259,7 +259,7 @@ class ManagerController {
     // a requisição foi feita errada.
     if (!queryIdentified) {
       responseAPI.status = 400;
-      messages.push(constant.MsgInvalidQueryParams);
+      messages.push(constantUtil.MsgInvalidQueryParams);
       responseAPI.body = { code_event: LogDTO.code_event, messages };
     }
 
@@ -331,7 +331,7 @@ class ManagerController {
     // a requisição foi feita errada.
     if (!queryIdentified) {
       responseAPI.status = 400;
-      messages.push(constant.MsgInvalidQueryParams);
+      messages.push(constantUtil.MsgInvalidQueryParams);
       responseAPI.body = { code_event: LogDTO.code_event, messages };
     }
 
@@ -479,7 +479,7 @@ class ManagerController {
     }
 
     if (!responseAPI.status) {
-      jsonDBInfo.database_name = constant.DataBaseFileName;
+      jsonDBInfo.database_name = constantUtil.DataBaseFileName;
       responseAPI.status = 200;
     }
 
@@ -512,7 +512,7 @@ class ManagerController {
     if (!table_name || !validTableNames.includes(table_name)) {
       LogDTO.json_log_event.info.push('table_name invalid');
       responseAPI.status = 400;
-      messages.push(constant.MsgInvalidID.replace('id', 'table_name'));
+      messages.push(constantUtil.MsgInvalidID.replace('id', 'table_name'));
     }
 
     if (table_name === 'log_event') {
@@ -525,7 +525,7 @@ class ManagerController {
 
       if (respDeleteLogEvent.was_error) {
         responseAPI.status = 500;
-        messages.push(constant.MsgStatus500);
+        messages.push(constantUtil.MsgStatus500);
       } else {
         responseAPI.status = 200;
       }
@@ -541,7 +541,7 @@ class ManagerController {
 
       if (respDeleteLogError.was_error) {
         responseAPI.status = 500;
-        messages.push(constant.MsgStatus500);
+        messages.push(constantUtil.MsgStatus500);
       } else {
         responseAPI.status = 200;
       }
