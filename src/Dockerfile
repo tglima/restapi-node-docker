@@ -5,17 +5,13 @@ FROM node:18-alpine
 # Caso o usuário informe será utilizado o valor definido por ele
 
 ARG NU_PORT=1985
-ARG API_KEY="914669d3-229d8912823c;798fed97-4d4faee7ebf7"
 ARG NODE_ENV=homolog
-ARG MNG_AUTHENTICATION="dGdsaW1hdGVjaEBlbWFpbC5jb206Um9tYW5vczEwMTA=;"
 ARG EXPRESS_TRUST_PROXY_VALUE=0
 ARG SWAGGER_URL="http://localhost:{{NU_PORT}}/swagger"
 
 # Define as variáveis de ambiente específicas para a aplicação
 ENV NU_PORT=$NU_PORT
-ENV API_KEY=$API_KEY
 ENV NODE_ENV=$NODE_ENV
-ENV MNG_AUTHENTICATION=$MNG_AUTHENTICATION
 ENV EXPRESS_TRUST_PROXY_VALUE=$EXPRESS_TRUST_PROXY_VALUE
 ENV SWAGGER_URL=$SWAGGER_URL
 
