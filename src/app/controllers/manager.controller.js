@@ -11,12 +11,12 @@ import dbUtil from '../utils/db.util';
 async function getZipDataBase(codeEvent) {
   const returnMethod = util.getReturnMethod('getZipDataBase');
 
-  returnMethod.info.push(`info: database = ${dbUtil.DataBaseFileName}`);
+  returnMethod.info.push(`info: database = ${constant.DataBaseFileName}`);
   let filePath;
   let fileData;
 
   try {
-    filePath = path.join(__dirname, '..', 'assets', dbUtil.DataBaseFileName);
+    filePath = path.join(__dirname, '..', 'assets', constant.DataBaseFileName);
     fileData = await readFile(filePath);
   } catch (error) {
     await logService.error({ method: returnMethod.nm_method, error });
@@ -29,7 +29,7 @@ async function getZipDataBase(codeEvent) {
   returnMethod.info.push(`info: filePath = ${filePath}`);
 
   if (fileData) {
-    const respCreateZip = await util.createZip(fileData, dbUtil.DataBaseFileName, `${codeEvent}.zip`);
+    const respCreateZip = await util.createZip(fileData, constant.DataBaseFileName, `${codeEvent}.zip`);
 
     if (respCreateZip.was_error || !respCreateZip.response) {
       respCreateZip.messages.forEach((message) => {
@@ -479,7 +479,7 @@ class ManagerController {
     }
 
     if (!responseAPI.status) {
-      jsonDBInfo.database_name = dbUtil.DataBaseFileName;
+      jsonDBInfo.database_name = constant.DataBaseFileName;
       responseAPI.status = 200;
     }
 
