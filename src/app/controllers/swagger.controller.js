@@ -1,62 +1,61 @@
 import swaggerUi from 'swagger-ui-express';
+import constantUtil from '../utils/constant.util';
 
 const swaggerJson = require('../assets/swagger.json');
+const swaggerManagerJson = require('../assets/swagger-manager.json');
 
 const customOptions = {
-  customCss: process.env.SWAGGER_CUSTOM_CSS,
-  customSiteTitle: process.env.SWAGGER_CUSTOM_SITE_TITLE,
+  customCss: constantUtil.SwaggerCustomCSS,
+  customSiteTitle: constantUtil.CustomSiteTitle,
 };
 
-function getSwaggerDocument() {
-  const swaggerDocument = swaggerJson;
+function swaggerJSON() {
+  let document = swaggerJson;
+  document = JSON.stringify(document);
+  document = document.replace('{{NU_VERSION}}', constantUtil.NuVersionAPI);
+  document = document.replace('{{SWAGGER_INFO_VERSION}}', constantUtil.SwaggerInfoVersion);
+  document = document.replace('{{SWAGGER_INFO_DESCRIPTION}}', constantUtil.SwaggerInfoDesc);
+  document = document.replace('{{SWAGGER_SERVERS_DESCRIPTION}}', constantUtil.SwaggerServersDescription);
 
-  if (swaggerDocument.info) {
-    if (swaggerDocument.info.version) {
-      const { version } = swaggerDocument.info;
-      swaggerDocument.info.version = version.replace(
-        '{{SWAGGER_INFO_VERSION}}',
-        process.env.SWAGGER_INFO_VERSION
-      );
-    }
+  return JSON.parse(document);
+}
 
-    if (swaggerDocument.info.description) {
-      const { description } = swaggerDocument.info;
-      swaggerDocument.info.description = description.replace(
-        '{{SWAGGER_INFO_DESCRIPTION}}',
-        process.env.SWAGGER_INFO_DESCRIPTION
-      );
-    }
-  }
+function mngSwaggerJSON() {
+  const MsgDBDeleteRows = constantUtil.MsgDatabaseDeleteRows.replace('{{VALUE}}', constantUtil.QtLimitDelete);
 
-  if (swaggerDocument.servers && swaggerDocument.servers[0]) {
-    if (swaggerDocument.servers[0].description) {
-      const { description } = swaggerDocument.servers[0];
+  let document = swaggerManagerJson;
+  document = JSON.stringify(document);
+  document = document.replace('{{NU_VERSION}}', constantUtil.NuVersionAPI);
+  document = document.replace('{{MSG_DATABASE_DELETE_ROWS}}', MsgDBDeleteRows);
+  document = document.replace('{{QTD_ITEMS_DELETE}}', constantUtil.QtLimitDelete);
+  document = document.replace('{{SWAGGER_INFO_DESCRIPTION_MNG}}', constantUtil.SwaggerInfoDescMng);
+  document = document.replace('{{SWAGGER_SERVERS_DESCRIPTION}}', constantUtil.SwaggerServersDescription);
 
-      swaggerDocument.servers[0].description = description.replace(
-        '{{SWAGGER_SERVERS_DESCRIPTION}}',
-        process.env.SWAGGER_SERVERS_DESCRIPTION
-      );
-    }
-
-    if (swaggerDocument.servers[0].url) {
-      const { url } = swaggerDocument.servers[0];
-      swaggerDocument.servers[0].url = url.replace(
-        '{{NU_VERSION}}',
-        process.env.NU_VERSION
-      );
-    }
-  }
-
-  return swaggerDocument;
+  return JSON.parse(document);
 }
 
 class SwaggerController {
-  getSwaggerJSON(req, res) {
-    res.json(getSwaggerDocument());
+  async respSwaggerJSON(req, res) {
+    if (req.originalUrl.includes('swagger-manager')) {
+      return res.status(200).json(mngSwaggerJSON());
+    }
+    return res.status(200).json(swaggerJSON());
   }
 
-  setupSwaggerUI() {
-    return swaggerUi.setup(getSwaggerDocument(), customOptions);
+  getCustomOptions() {
+    return customOptions;
+  }
+
+  getSwaggerJSON() {
+    return swaggerJSON();
+  }
+
+  getMngSwaggerJSON() {
+    return mngSwaggerJSON();
+  }
+
+  setupSwaggerUI(jsonDocument) {
+    return swaggerUi.setup(jsonDocument, customOptions);
   }
 }
 

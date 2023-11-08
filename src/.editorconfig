@@ -27,3 +27,6 @@ insert_final_newline = true
 #Restringe essa configuracao apenas para arquivos do tipo js
 [*.{js}]
 indent_brace_style = K&R
+
+[*.js]
+max_line_length = 110

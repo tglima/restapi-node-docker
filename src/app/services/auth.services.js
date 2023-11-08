@@ -1,38 +1,33 @@
-import constantUtil from '../utils/constant.util';
+import logRepository, { TypesEvent } from '../repository/log.repository';
+import util from '../utils';
+import logService from './log.service';
+import validatorServices from './validator.services';
 
 class AuthService {
   async checkAuth(req, res, next) {
-    let urlBase = req.originalUrl;
-    const response401 = { message: [constantUtil.MsgStatus401] };
-    urlBase = urlBase.replace(`/api/v${process.env.NU_VERSION}`, '');
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
+    const messages = [];
+    const respValidateRequest = validatorServices.validateRequest(req);
 
-    if (urlBase === '/') {
-      return next();
+    LogDTO.json_log_event.methods.push(respValidateRequest);
+
+    if (!respValidateRequest.response) {
+      respValidateRequest.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      const responseAPI = {
+        status: 401,
+        body: { code_event: LogDTO.code_event, messages },
+      };
+
+      LogDTO.json_log_event.io_data.request_data = util.getRequestData(req);
+      LogDTO.json_log_event.response_data = responseAPI;
+      logService.info('unauthorized request');
+      logRepository.saveLogEvent(LogDTO);
+      return res.status(responseAPI.status).json(responseAPI.body);
     }
-
-    if (urlBase.includes('/swagger')) {
-      return next();
-    }
-
-    if (urlBase.includes('/health-check/')) {
-      return next();
-    }
-
-    const apiKey = !req.header('x-api-key')
-      ? req.header('X-API-KEY')
-      : req.header('x-api-key');
-
-    if (!apiKey) {
-      return res.status(401).send(response401);
-    }
-
-    const validKeys = process.env.API_KEY.split(';');
-
-    if (validKeys.includes(apiKey)) {
-      return next();
-    }
-
-    return res.status(401).send(response401);
+    return next();
   }
 }
 

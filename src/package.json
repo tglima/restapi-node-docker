@@ -1,14 +1,15 @@
 {
   "name": "restapi-node-docker",
-  "version": "0.0.3",
-  "description": "API Rest desenvolvida com NodeJS e PostgreSQL para rodar dentro de um container docker",
+  "version": "0.4.0",
+  "description": "API Rest desenvolvida com NodeJS e SQLite para rodar dentro de um container docker",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec npx babel-node ./app/main.js",
-    "prebuild": "if [ -d ../dist ]; then rm -rf ../dist; fi",
-    "build": "babel ./app -d ../dist && cpy package.json ../dist/ && cpy './app/assets/**' '../dist/assets/'",
-    "start": "node main.js"
+    "prebuild": "rimraf ../dist",
+    "build": "babel ./app -d ../dist/app",
+    "postbuild": "node -e \"const fs = require('fs-extra'); fs.copySync('./app/config', '../dist/app/config'); fs.copySync('./app/assets', '../dist/app/assets/'); fs.copySync('package.json', '../dist/package.json');  fs.copySync('Dockerfile', '../dist/Dockerfile');\"",
+    "start": "node ./app/main.js"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
   },
   "homepage": "https://github.com/tglima/restapi-node-docker#readme",
   "dependencies": {
+    "archiver": "^6.0.1",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
@@ -40,11 +42,13 @@
     "express-rate-limit": "^6.7.0",
     "helmet": "^6.0.1",
     "jsonwebtoken": "^9.0.0",
+    "moment-timezone": "^0.5.43",
     "morgan-body": "^2.6.8",
-    "pg": "^8.10.0",
     "sequelize": "^6.33.0",
     "sqlite3": "^5.1.6",
     "swagger-ui-express": "^5.0.0",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0",
     "youch": "^3.2.2"
   },
   "devDependencies": {
@@ -56,7 +60,6 @@
     "@babel/runtime": "^7.22.6",
     "@types/jest": "^29.5.1",
     "@types/supertest": "^2.0.12",
-    "cpy-cli": "^5.0.0",
     "eslint": "^8.45.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
@@ -64,9 +67,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-security": "^1.6.0",
+    "fs-extra": "^11.1.1",
     "jest": "^29.5.0",
     "nodemon": "^3.0.1",
     "prettier": "^2.8.8",
+    "rimraf": "^5.0.5",
     "supertest": "^6.3.3"
   }
 }

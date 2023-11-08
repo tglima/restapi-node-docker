@@ -1,44 +1,95 @@
-import productRepository from '../repository/sqlite/product.repository';
+import logRepository, { TypesEvent } from '../repository/log.repository';
+import productRepository from '../repository/product.repository';
+import logService from '../services/log.service';
+import util from '../utils';
 import constantUtil from '../utils/constant.util';
 
-class ProductController {
-  async findAll(req, res) {
-    const responseMethod = await productRepository.getAllProducts();
+async function valFindById(id) {
+  const returnMethod = util.getReturnMethod('valFindById');
 
-    if (responseMethod.error) {
-      return res.status(500).json({ messages: [constantUtil.MsgStatus500] });
-    }
+  returnMethod.info.push(`info: id  = ${id}`);
+  id = +id;
 
-    if (!responseMethod.response) {
-      return res.status(404).json({ messages: [constantUtil.MsgStatus404] });
-    }
-
-    const products = {
-      items: responseMethod.response.map((product) => product.toJSON()),
-    };
-
-    return res.status(200).json(products);
+  if (!id || !Number.isSafeInteger(id)) {
+    returnMethod.info.push('info: not Number.isSafeInteger');
+    returnMethod.messages.push(constantUtil.MsgInvalidID);
   }
 
-  async findById(req, res) {
-    let { id } = req.params;
-    id = +id;
+  returnMethod.info.push(`info: messages.length  = ${returnMethod.messages.length}`);
 
-    if (!id || !Number.isSafeInteger(id)) {
-      return res.status(400).json({ messages: [constantUtil.MsgInvalidID] });
+  if (returnMethod.messages.length === 0) {
+    const respFindByById = await productRepository.findById(id);
+    returnMethod.methods.push(respFindByById);
+
+    if (respFindByById.was_error) {
+      returnMethod.was_error = true;
+      returnMethod.info.push(`info: was_error  = ${returnMethod.was_error}`);
+      returnMethod.messages.push(constantUtil.MsgStatus500);
     }
 
-    const responseMethod = await productRepository.getProductById(id);
-
-    if (responseMethod.error) {
-      return res.status(500).json({ messages: [constantUtil.MsgStatus500] });
+    if (!respFindByById.was_error && !respFindByById.response) {
+      returnMethod.messages.push(constantUtil.MsgStatus404);
     }
 
-    if (!responseMethod.response) {
-      return res.status(404).json({ messages: [constantUtil.MsgStatus404] });
+    if (!respFindByById.was_error && respFindByById.response) {
+      returnMethod.response = respFindByById.response;
+    }
+  }
+
+  returnMethod.dt_finish = util.getDateNow();
+  return returnMethod;
+}
+
+class ProductController {
+  async find(req, res) {
+    const LogDTO = util.getLogDTO(TypesEvent.REQUEST, req);
+
+    const messages = [];
+    const responseAPI = { status: undefined, body: undefined };
+
+    let respFind;
+    const { id } = req.query;
+
+    if (id) {
+      const respValfindById = await valFindById(id);
+      LogDTO.json_log_event.methods.push(respValfindById);
+      respValfindById.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      respFind = respValfindById;
+    } else {
+      const respFindAll = await productRepository.findAll();
+      LogDTO.json_log_event.methods.push(respFindAll);
+      respFindAll.messages.forEach((message) => {
+        messages.push(message);
+      });
+
+      respFind = respFindAll;
     }
 
-    return res.status(200).json(responseMethod.response.toJSON());
+    if (respFind.was_error) {
+      responseAPI.status = 500;
+    }
+
+    if (!respFind.was_error && !respFind.response) {
+      responseAPI.status = 400;
+    }
+
+    if (!respFind.was_error && respFind.response) {
+      responseAPI.status = 200;
+      responseAPI.body = respFind.response;
+    }
+
+    if (responseAPI.status !== 200) {
+      responseAPI.body = { code_event: LogDTO.code_event, messages };
+      logService.info(JSON.stringify(responseAPI));
+    }
+
+    LogDTO.json_log_event.io_data.response_data = responseAPI;
+
+    await logRepository.saveLogEvent(LogDTO);
+    return res.status(responseAPI.status).json(responseAPI.body);
   }
 }
 
