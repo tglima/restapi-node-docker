@@ -101,7 +101,7 @@ class ValidatorService {
   validateRequest(req) {
     const returnMethod = util.getReturnMethod('validateRequest');
 
-    const publicRoutes = ['/swagger', '/health-check/', '/favicon'];
+    const publicRoutes = ['/swagger', '/health-check', '/favicon'];
     const mngRoutes = ['/mng/'];
     const validKeys = constantUtil.ApiKey.split(';');
     const validMngAuth = constantUtil.MngKeyAuth.split(';');
