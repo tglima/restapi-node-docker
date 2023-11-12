@@ -24,9 +24,11 @@ class App {
   start() {
     dbUtil.SQLite.authenticate()
       .then(() => {
-        this.server.listen(this.#port, () => {
-          logService.info(constantUtil.MsgStartAPI);
-        });
+        if (process.env.NODE_ENV !== 'test') {
+          this.server.listen(this.#port, () => {
+            logService.info(constantUtil.MsgStartAPI);
+          });
+        }
       })
       .catch((error) => {
         logService.info(`Error message: ${error.message}`);
