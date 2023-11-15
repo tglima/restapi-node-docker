@@ -201,7 +201,7 @@ describe('LogEvents Endpoints Check OK', () => {
 
   it('should return status 200 - GET /', async () => {
     const response = await supertest(global.server)
-      .get(`${urlLogEvents}/find?dt_start=${dt_start}&dt_finish=${dt_finish}&page=1`)
+      .get(`${urlLogEvents}/find?dt_start=${'2023-11-15 01:00:00'}&dt_finish=${dt_finish}&page=1`)
       .set('API-KEY', `${apiKey}`)
       .set('AUTHORIZATION', `${authorization}`);
     expect(response.status).toBe(200);
