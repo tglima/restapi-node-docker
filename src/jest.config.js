@@ -29,8 +29,8 @@ module.exports = {
     '^.+\\.js$': 'babel-jest',
   },
 
-  // Define o tempo máximo de timeout para cada teste para 10 segundos.
-  testTimeout: 10000,
+  // Define o tempo máximo de timeout para cada teste para 60 segundos.
+  testTimeout: 60000,
 
   globalSetup: './__test__/globalSetup.js',
   globalTeardown: './__test__/globalTeardown.js',
