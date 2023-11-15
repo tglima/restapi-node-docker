@@ -1,17 +1,11 @@
 import supertest from 'supertest';
-import constantUtil from '../../app/utils/constant.util';
 
-const urlDBDelete = `/v${constantUtil.NuVersionAPI}/mng/database/delete`;
-const urlDBBackup = `/v${constantUtil.NuVersionAPI}/mng/database-backup`;
-const urlDBInfo = `/v${constantUtil.NuVersionAPI}/mng/database-info`;
-
-const apiKey = constantUtil.ApiKey;
-const authorization = constantUtil.MngKeyAuth;
+const { apiKey, authorization, urlDBDelete, urlDBBackup, urlDBInfo } = require('../testUtil');
 
 describe('Database-Delete Check BadRequest', () => {
   it('should return status 400 - DELETE /', async () => {
     const response = await supertest(global.server)
-      .delete(`${urlDBDelete}?table_name=${constantUtil.ApiKey}`)
+      .delete(`${urlDBDelete}?table_name=${apiKey}`)
       .set('API-KEY', `${apiKey}`)
       .set('AUTHORIZATION', `${authorization}`);
     expect(response.status).toBe(400);
@@ -35,7 +29,8 @@ describe('Database-backup Endpoints Check Authorization', () => {
   it('should return status 401 - GET /', async () => {
     const response = await supertest(global.server)
       .get(`${urlDBBackup}`)
-      .set('API-KEY', `${constantUtil.NuVersionAPI}`);
+      .set('x-cookie', `${authorization}`)
+      .set('API-KEY', `${authorization}`);
     expect(response.status).toBe(401);
   });
 
@@ -75,7 +70,7 @@ describe('Database-Delete Endpoints Check Authorization', () => {
   it('should return status 401 - DELETE /', async () => {
     const response = await supertest(global.server)
       .delete(`${urlDBDelete}`)
-      .set('API-KEY', `${constantUtil.Port}`);
+      .set('API-KEY', `${authorization}`);
     expect(response.status).toBe(401);
   });
 
@@ -113,7 +108,8 @@ describe('Database-Info Endpoints Check Authorization', () => {
   it('should return status 401 - GET /', async () => {
     const response = await supertest(global.server)
       .get(`${urlDBInfo}`)
-      .set('API-KEY', `${constantUtil.NuVersionAPI}`);
+      .set('x-cookie', `${apiKey}`)
+      .set('API-KEY', `${authorization}`);
 
     expect(response.status).toBe(401);
   });
