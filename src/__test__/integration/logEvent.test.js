@@ -4,8 +4,13 @@ import utils from '../../app/utils';
 
 const { apiKey, authorization, urlLogEvents, momentDateFormat } = require('../testUtil');
 
-const dt_finish = utils.getDateNow();
-const dt_start = moment(dt_finish).subtract(1, 'hours').format(momentDateFormat);
+let dt_start;
+let dt_finish;
+
+beforeAll(() => {
+  dt_finish = utils.getDateNow();
+  dt_start = moment(dt_finish).subtract(1, 'hours').format(momentDateFormat);
+});
 
 describe('LogEvents Endpoints Check BadRequest', () => {
   it('should return status 400 - GET /', async () => {
