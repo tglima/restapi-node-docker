@@ -4,7 +4,6 @@ dotenv.config({ path: './app/config/test.env' });
 
 module.exports = {
   // Diretórios onde os testes são procurados
-  // testMatch: ['**/__tests__/**/*.test.js'],
   testMatch: ['**/__test__/integration/**/*.test.js', '**/__test__/unit/**/*.test.js'],
 
   // Configuração para o ambiente Node.js
