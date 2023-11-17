@@ -10,9 +10,7 @@ module.exports = {
   testEnvironment: 'node',
 
   // Módulo de cobertura de código
-  collectCoverage: true,
-  collectCoverageFrom: ['<rootDir>/src/app/**/*.js'],
-  coverageDirectory: '__test__/coverage',
+  collectCoverage: false,
 
   // Ignora arquivos que estão dentro do diretório node_modules.
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
@@ -21,15 +19,15 @@ module.exports = {
   // Configura as extensões de arquivo que o Jest deve processar durante a execução dos testes.
   moduleFileExtensions: ['js', 'json'],
 
-  clearMocks: false,
+  clearMocks: true,
 
   // Configura o jest para utilizar o babel-jest e considerar os imports e classes.
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
 
-  // Define o tempo máximo de timeout para cada teste para 60 segundos.
-  testTimeout: 60000,
+  // Define o tempo máximo de timeout para cada teste para 30 segundos.
+  testTimeout: 30000,
 
   globalSetup: './__test__/globalSetup.js',
   globalTeardown: './__test__/globalTeardown.js',
