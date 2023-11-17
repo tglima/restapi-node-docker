@@ -11,6 +11,10 @@ dotenv.config({ path: envPath });
 const nuPort = process.env.NU_PORT || 9090;
 let instance;
 
+function getMustShowInfoMessage() {
+  return process.env.NODE_ENV !== 'test' || process.env.MUST_HIDE_INFO_MESSAGE;
+}
+
 function getSwaggerURL() {
   const startValueSwaggerURL = process.env.SWAGGER_URL || 'http://localhost:{{NU_PORT}}/swagger';
   return startValueSwaggerURL.replace('{{NU_PORT}}', nuPort);
@@ -60,6 +64,7 @@ class ConstantUtil {
     this.QtLimitResult = +process.env.QT_LIMIT_RESULT || 10;
     this.QtLimitDelete = +process.env.QT_LIMIT_DELETE || 10;
     this.MsgStartAPI = getMsgStartAPI();
+    this.MustShowInfoMessage = getMustShowInfoMessage();
     // #endregion
 
     this.TrustProxy = 'trust proxy';
