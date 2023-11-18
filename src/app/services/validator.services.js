@@ -37,7 +37,13 @@ class ValidatorService {
 
     returnMethod.info.push(`info: startDate = ${startDate} finishDate = ${finishDate}`);
 
-    if (moment(startDate, this.#DateTimeFormat).isAfter(moment(finishDate, this.#DateTimeFormat))) {
+    returnMethod.response =
+      returnMethod.response === null ? (returnMethod.response = true) : returnMethod.response;
+
+    if (!startDate || !finishDate) {
+      returnMethod.messages.push(constantUtil.MsgInvalidDateTimeRange);
+      returnMethod.response = false;
+    } else if (moment(startDate, this.#DateTimeFormat).isAfter(moment(finishDate, this.#DateTimeFormat))) {
       returnMethod.messages.push(constantUtil.MsgInvalidDateTimeRange);
       returnMethod.response = false;
     }
@@ -101,7 +107,7 @@ class ValidatorService {
   validateRequest(req) {
     const returnMethod = util.getReturnMethod('validateRequest');
 
-    const publicRoutes = ['/swagger', '/health-check/', '/favicon'];
+    const publicRoutes = ['/swagger', '/health-check', '/favicon'];
     const mngRoutes = ['/mng/'];
     const validKeys = constantUtil.ApiKey.split(';');
     const validMngAuth = constantUtil.MngKeyAuth.split(';');

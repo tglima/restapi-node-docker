@@ -11,6 +11,10 @@ dotenv.config({ path: envPath });
 const nuPort = process.env.NU_PORT || 9090;
 let instance;
 
+function getMustShowInfoMessage() {
+  return process.env.NODE_ENV !== 'test' || process.env.MUST_HIDE_INFO_MESSAGE;
+}
+
 function getSwaggerURL() {
   const startValueSwaggerURL = process.env.SWAGGER_URL || 'http://localhost:{{NU_PORT}}/swagger';
   return startValueSwaggerURL.replace('{{NU_PORT}}', nuPort);
@@ -55,11 +59,12 @@ class ConstantUtil {
     this.LevelCompress = +process.env.LEVEL_COMPRESS_FILE || 5;
     this.MaxAllowedMinServer = +process.env.MAX_ALLOWED_MIN_SERVER || 5;
     this.QtMaxRateMin = +process.env.QT_MAX_RATE_MIN || 300;
-    this.ApiKey = process.env.API_KEY || '77be91d8-4bb1ba8e27a9;';
-    this.MngKeyAuth = process.env.MNG_KEY_AUTH || 'dGdsaW1hdGVjaEBlbWFpbC5jb206Um9tYW5vczEwMTA=;';
+    this.ApiKey = process.env.API_KEY || '77be91d8-4bb1ba8e27a9';
+    this.MngKeyAuth = process.env.MNG_KEY_AUTH || 'dGdsaW1hdGVjaEBlbWFpbC5jb206Um9tYW5vczEwMTA=';
     this.QtLimitResult = +process.env.QT_LIMIT_RESULT || 10;
     this.QtLimitDelete = +process.env.QT_LIMIT_DELETE || 10;
     this.MsgStartAPI = getMsgStartAPI();
+    this.MustShowInfoMessage = getMustShowInfoMessage();
     // #endregion
 
     this.TrustProxy = 'trust proxy';

@@ -1,4 +1,5 @@
 import winston from 'winston';
+import constantUtil from '../utils/constant.util';
 
 const logRepository = require('../repository/log.repository');
 
@@ -16,7 +17,9 @@ class LogService {
   #logger;
 
   info(message) {
-    this.#logger.info(message);
+    if (constantUtil.MustShowInfoMessage) {
+      this.#logger.info(message);
+    }
   }
 
   async error({ method, error }) {

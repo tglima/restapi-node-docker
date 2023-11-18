@@ -48,9 +48,12 @@ class ProductController {
     const responseAPI = { status: undefined, body: undefined };
 
     let respFind;
-    const { id } = req.query;
+    const { id, ...unkown } = req.query;
 
-    if (id) {
+    if (Object.keys(unkown).length > 0) {
+      messages.push(constantUtil.MsgInvalidQueryParams);
+      respFind = { was_error: false, response: undefined };
+    } else if (id) {
       const respValfindById = await valFindById(id);
       LogDTO.json_log_event.methods.push(respValfindById);
       respValfindById.messages.forEach((message) => {
