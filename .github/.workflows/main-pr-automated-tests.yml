@@ -1,0 +1,55 @@
+name: Verify pull request
+
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  install-dependencies-run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use Node.js and Open the src folder
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          working-directory: src
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test || exit 1
+
+      - name: Comment on Pull Request
+        if: ${{ success() }}
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const time = new Date().toLocaleString();
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${time}\nOs testes foram todos executados com sucesso. Aguarde a análise do PR`
+            })
+
+      - name: Close Pull Request on Test Failure
+        if: ${{ failure() }}
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `${new Date().toLocaleString()}\nOs testes falharam. Este pull request será fechado automaticamente.`
+            })
+            github.pulls.update({
+              pull_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed'
+            })
