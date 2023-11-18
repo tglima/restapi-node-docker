@@ -9,11 +9,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Use Node.js and Open the src folder
+      - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "18.x"
-          working-directory: src
+
+      - name: Show filepath
+        run: pwd
+
+      - name: Show dirs
+        run: |
+          find . -type d
+
+      - name: Open the src folder
+        run: cd restapi-node-docker/src
 
       - name: Install dependencies
         run: npm ci
@@ -23,12 +32,12 @@ jobs:
 
       - name: Comment on Pull Request
         if: ${{ success() }}
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const time = new Date().toLocaleString();
-            github.issues.createComment({
+             await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -37,19 +46,19 @@ jobs:
 
       - name: Close Pull Request on Test Failure
         if: ${{ failure() }}
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.issues.createComment({
-              issue_number: context.issue.number,
+            await github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: `${new Date().toLocaleString()}\nOs testes falharam. Este pull request será fechado automaticamente.`
-            })
-            github.pulls.update({
-              pull_number: context.issue.number,
+            });
+            await github.rest.pulls.update({
+              pull_number: context.payload.pull_request.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'closed'
-            })
+            });
