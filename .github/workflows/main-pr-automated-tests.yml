@@ -19,11 +19,9 @@ jobs:
 
       - name: Install dependencies
         run: npm i --exact
-        working-directory: ./src
 
       - name: Run tests
         run: npm test || exit 1
-        working-directory: ./src
 
       - name: Comment on Pull Request
         if: ${{ success() }}
