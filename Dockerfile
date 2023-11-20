@@ -32,7 +32,7 @@ RUN apk add --no-cache nano
 RUN npm install -g npm@10.2.3
 
 # Instale apenas as dependências de produção do projeto
-RUN npm install --omit=dev --exact
+RUN npm ci --omit=dev
 
 # Exponha a porta configurada
 EXPOSE $NU_PORT
