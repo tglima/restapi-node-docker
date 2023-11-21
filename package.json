@@ -1,14 +1,14 @@
 {
   "name": "restapi-node-docker",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "API Rest desenvolvida com NodeJS e SQLite para rodar dentro de um container docker",
   "main": "main.js",
   "scripts": {
     "test": "jest --detectOpenHandles",
     "dev": "nodemon --exec npx babel-node ./app/main.js",
-    "prebuild": "rimraf ../dist",
-    "build": "babel ./app -d ../dist/app",
-    "postbuild": "node -e \"const fs = require('fs-extra'); fs.copySync('./app/config', '../dist/app/config'); fs.copySync('./app/assets', '../dist/app/assets/'); fs.copySync('package.json', '../dist/package.json');  fs.copySync('Dockerfile', '../dist/Dockerfile');\"",
+    "prebuild": "rimraf ./dist",
+    "build": "babel ./app -d ./dist/app",
+    "postbuild": "node -e \"const fs = require('fs-extra'); fs.copySync('./app/config', './dist/app/config'); fs.copySync('./app/assets', './dist/app/assets/'); fs.copySync('package.json', './dist/package.json'); fs.copySync('./app/config', './dist/app/config'); fs.copySync('./app/assets', './dist/app/assets/'); fs.copySync('package-lock.json', './dist/package-lock.json');  fs.copySync('Dockerfile', './dist/Dockerfile');\"",
     "start": "node ./app/main.js"
   },
   "repository": {
